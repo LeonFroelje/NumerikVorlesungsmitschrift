@@ -1,0 +1,270 @@
+\documentclass[11pt,a4paper,oneside]{scrartcl}
+
+\input{../Praeambel.tex}
+
+\begin{document}
+\section{Numerische Integration}
+Berechnung von Integralen, z.B. zur Flächen- oder Volumenberechnung, 
+aber auch 
+notwendig in komplexeren Formeln/Algorithmen, z.B. Fourier-Integrale, 
+Numerik 
+partieller-Differentialgleichungen. Oft nicht (leicht) von Hand zu 
+berechnen, 
+\(\Rightarrow\) Algorithmen zur näherungsweisen Berechnung von 
+Integralen.\\
+Viele typiche ''\underline{Quadraturformeln}'' haben für \(f\in C[a,b]\)
+die Form 
+\[
+\int^b_a f(x)\, dx \approx \sum_{i=0}^n x_i f(x_i),
+\]
+ d.h. Kombination von Punktauswertungen mit Stützstellen \( a\leq x_0 < 
+ x_1\dots 
+ x_n\leq b\)
+\begin{remindexample}[Rieman-Integral]\hfill\\
+z.B. Rieman-Summe \[
+I_h(f)\coloneqq \sum_{i=1}^n f(x_{i-1})\cdot(x_i-x_{i-1})
+\]
+\(f\) Rieman-Integrierbar \(\leadsto I_h(f)\to I(f) \text{ für } h\to 
+0, \ 
+h\coloneqq \max(x_i-x_{i-1})\)\\
+\end{remindexample}
+\subsection{Interpolatorische Quadraturformel}
+Kennt man eine Polynom-Interpolation von $f$, (oder Hermite-), kann man 
+statt $f$ 
+einfach die Interpolierende integrieren. Integration über Polynome ist 
+einfach.
+Zu \(a\leq x_0 <x_1\dots < x_n\leq b\) sei \(P_n\in\Pol_n\) das 
+interpolierende 
+Polynom zu \(f\) mit \(P_n(x_i)=f(x_i), i=0,\dots, n\)\\
+setze dann \[
+I^{(n)}(f)\coloneqq \int^b_aP_n(x)\, dx =\int^b_a \sum_{i=0}^n 
+f(x_i)L^{(n)}_i(x)\, dx = \sum_{i=0}^n f(x_i)\int^b_a L^{(n)}_i(x)\, dx
+\]
+\[
+P_n(x)=\sum_{i=0}^n f(x_i)L^{(n)}_i(x)
+\]
+Wie groß ist der Fehler \(I(f)-I^{(n)}\)?\\
+Mit der Formel fürden Interpolationen Fehler folgt:
+
+\begin{theorem}
+    Für die Lagrange-Quadraturformel $I^{(n)}$ gilt, falls $f \in
+    C^{n+1}[a,b]$:\[
+        I(f) - I^{(n)}(f) = \int_a^b f(x) - p_n(x) dx = \int_a^b\frac{1}
+        {(n+1)!}
+        f^{(n+1}(\xi_x)\prod_{j=0}^n(x-x_j)dx
+    \]
+    also \[   
+        \abs{I(f) - I^{(n)}(f)} \leq \frac{1}{(n+1)!}\cdot 
+        \max\limits_{[a,b]}
+        \abs{f^{(n+1)}}\cdot \abs{\int_a^b\prod_{j=0}^n(x-x_j) dx}
+    \]
+\end{theorem}
+\begin{remark}
+    man kann auch zeigen:\[
+    I(f) - I^{(n)}(f) = \int_a^b f[x_0, \dots, x_n, x] \prod_{j=0}^n(x-
+    x-j)dx
+    \] 
+\end{remark}
+
+Interpolatorische Integrationsformeln, \(I^{(n)}
+(f)\coloneqq\int^b_ap_n(x)\diff 
+x\), \( p_n\in\Pol\) des Interpolationspolynoms zu \(f\) in  
+\(x_0,\dots,x_n
+\in[a,b]\) Nach Konstruktion: die interpolierende Quadraturformel ist 
+''exakt'' 
+für beliebige Polynome \(p\in\Pol_n\), wegen des Eindeutigkeit der 
+Interpolationspolynoms.
+\begin{definition}
+    Eine Quadraturformel \(I^{(n)}\) wird (mindestens) ''\underline{von 
+    der 
+    Ordnung m}'' genannt, falls durch sie alle Polynomevom Grad \(\leq 
+    m-n\) 
+    exakt integriert werden.
+\end{definition}
+Damit sind die interpolatorischen Quadraturformeln \(I^{(n)}\) 
+mindestens von der 
+Ordnung \(n+1\).
+
+\begin{example}[Lagrange-Quadraturen mit n+1 Stützstellen mit gleichen 
+Abständen]\hfill
+\begin{enumerate}[(a)]
+    \item ''(abgeschlossene) \underline{Newton-Cotes-Formeln}'':\\
+    $a,b$ sind Stützstellen, $x_i=a+ih,\midspace \igb i 0 n$ mit 
+    $h=\frac{b-a}{n}$
+    \item ''\underline{offene Newton-Cotes-Formeln}:\\
+    $a,b$ sind \underline{keine} Stützstellen, $x_i = a+(i+1)h,\midspace
+    \igb i 0 
+    n, \midspace h=\frac{b-a}{n+2}$
+\end{enumerate}
+Die ersten Newton-Cotes-Formeln sind:
+\begin{description}
+\item[abgeschlossen:]\begin{align*}
+    I^{(1)} &= \frac{b-a}{2}(f(a) + f(b)) && 
+    \text{''\underline{Trapezregel}''}\\
+    I^{(2)} &= \frac{b-a}{6}\left(f(a) + 4f\left(\frac{ab}{2}\right) + 
+    f(b)\right) && \text{''\underline{Keplersche Fassregel}''}\\
+    I^{(3)} &= \frac{b-a}{8}\left(f(a) + 3f(a+h) + 3f(b-h) + f(b)\right)
+    && 
+    \text{''\underline{$\frac{3}{8}$-Regel}''}
+\end{align*}    
+\item[offen:]\begin{align*}
+    I^{(0)}(f) &\coloneqq (b-a) \cdot f\left(\frac{a+b}{2}\right) && 
+    \text{''\underline{Mittelpunktsregel}''}\\
+    I^{(1)}(f) &\coloneqq \frac{b-a}{2}(f(a+h) + f(b-h))\\
+    I^{(2)}(f) &\coloneqq \frac{b-a}{3}\left(2f(a+h) - f\left(\frac{a+b}
+    {2}\right) + 2f(b-h)\right)  
+\end{align*}
+
+\end{description}
+\end{example}
+Mit den Interpolationsabschätzungen und Integral-Mittelwertsätzen zeigt 
+man:
+
+\begin{theorem}[Quadraturfehler Newton-Cotes-Formeln]\hfill
+    \begin{enumerate}[i)]
+        \item Für die Trapezregel \(I^{(1)}\) mit \(f\in C^2[a,b]\) 
+        gilt: \[
+        \int^b_af(x)\diff x-\frac{b-a}{2}(f(a)+f(b)) = -\frac{(b-
+        a)^3}{12}f''(\xi) \text{ mit } \xi\in[a,b]
+        \]
+        \item Für die Simpson-Regel \(I^{(2)}\) mit \(f\in C^4[a,b]\) 
+        gilt: \[
+        \int^b_af(x)\diff x-\frac{b-a}{2}(f(a)+4f(\frac{a+b}{2})+f(b)) 
+        = 
+        -\frac{(b-a)^5}{2880}f^{(4)}(\xi) \text{ mit } \xi\in[a,b]
+        \]
+        \item Für die Mittelpunktformel \(I^{(0)}\) mit \(f\in 
+        C^2[a,b]\) gilt: \[
+        \int^b_af(x)\diff x-(b-a)f(\frac{a+b}{2} = -\frac{(b-
+        a)^3}{24}f^{(2)}(\xi) \text{ mit } \xi\in[a,b]
+        \]
+    \end{enumerate}
+\end{theorem}
+\begin{proof}
+    zu i) \begin{align*}
+    \int^b_af(x) \diff x - \int^b_a p_n(x) \diff x &= \int^b_a f(x)-
+    p_n(x) \diff 
+    x\\
+    &=\int^b_a f''(\xi(x))\cdot \frac{1}{2}\cdot(x-a)(x-b)\diff x\\
+    &= f''(\xi)\frac{1}{2}\int^b_a(x-a)(x-b)\diff x\\
+    &= \frac{1}{12}f''(\xi)(b-a)^3
+   \end{align*}
+\end{proof}
+\begin{remark}
+    zu iii) Mittelpunktformel ist exakt nicht nur für \(p\in\Pol_0\) 
+    sondern 
+    sogar für alle \(p\in\Pol_n\)
+\end{remark}
+
+\begin{remark}
+    Sind neben $f$ auch die Ableitungen $f'(x)$ bekannt, dann kann man 
+    auch eine 
+    Hermite-Interpolation zur Herleitung von Quadraturformeln nehmen, 
+    die Hermite-
+    Interpolationsfehlerabschätzung überträgt sich dann auf die 
+    Quadraturfehlerabschätzung.
+\end{remark}
+Um ein Integral besser zu approximieren, wird typicherweise nicht der 
+Polynomgrad 
+weiter erhöht, sondern eine Quadraturformel mit relativ geringen Grad 
+auf 
+Teilintervallen immer kleinerer Größe genutzt:\\
+z.B.    $a = y_0 < y_1 < \dots < y_N = b$ mit Teilintervallen $I_i = 
+[y_{i-1}, 
+    y_i]$:\[
+        \int_a^b f(x)\diff x = \sum_{i=1}^N \int_{I_i}f(x)\diff x\approx
+        \underset{I_h^{(n)}(f)}{\underbrace{\dsum_{i=1}^N \int_{I_i} 
+        \underset{\text{Interpolierende}}
+        {\underbrace{I^{(n)}_{[y_{i-1}, y_i]}f}}\diff x}}
+    \] 
+    und \begin{align*}
+                \int_a^b f(x)\diff x - I_h^{(n)}(f) &= \dsum_{i=1}^N 
+                \int_{I_i}f(x)\diff x - \int_a^b\left(I_{[y_{i-1}, 
+                y_i]}^{(n)}f\right)(x)\diff x\\
+                &\leq \dsum_{i=1}^N c_m\cdot(y_{i-1}-
+                y_i)^{m+1}\abs{f^{(m)}
+                (\xi_i)}\\
+                &\leq \dsum_{i=1}^N c_mh^{m+1}\cdot 
+                \dabs{f^{(m)}}_{\max[a,b]}\\
+                &\leq c_m(b-a)\frac{h}
+                {h_{\min}}h^{m}\cdot\dabs{f^{(m)}}_{\max}
+    \end{align*}
+    mit \[
+        N\leq \frac{b-a}{h_{\min}} , \largespace \frac{h}{h_{\min}}= 1, 
+        \text{ 
+        falls 
+        alle Teilintervalle gleich lang sind}
+    \]
+\begin{example}
+    $y_i = a+ih, \largespace h=\frac{b-a}{N}, \largespace \igb i 0 N$ 
+    gleichgroße 
+    Teilintervalle. 
+    Summierte Trapezregel \begin{align*}
+        I^{(1)}_h(f)\coloneqq \frac{h}{2}\left(f(a)+ \dsum_{i=1}^{N-
+        1}2f(y_i)+f(b)\right), \\
+        \abs{I(f)-I^{(1)}_h(f)}\leq \frac{b-a}{12}h^2
+        \abs{\abs{f^{(2)}}}_{\max[a,b]}
+    \end{align*}
+    Summierte Simpsonregel: \begin{align*}
+        I^{(2)}_h(f)\coloneqq \frac{h}{6}\left(f(a)+ \dsum_{i=1}^{N-
+        1}2f(y_i)+\dsum_{i=1}^{N}4f\middle(\frac{y_{i-1}+y_i}
+        {2}+f(b)\middle)
+        \right), \\
+        \abs{I(f)-I^{(2)}_h(f)}\leq \frac{b-a}{2880}h^4
+        \abs{\abs{f^{(4)}}}_{\max}
+    \end{align*}
+    Summierte Mittelpunktregel: \begin{align*}
+        I^{(0)}_h(f)\coloneqq h\dsum_{i=1}^{N}f\left(\frac{y_{i-1}+y_i}
+        {2}\right), \\
+        \abs{I(f)-I^{(0)}_h(f)}\leq \frac{b-a}{24}h^2
+        \abs{\abs{f^{(2)}}}_{\max}
+    \end{align*}
+\end{example}
+\begin{remark}
+    Ähnlich geht es für Hermite-Splines, d.h. lokale Hermite-
+    Interpolierende
+\end{remark}
+\begin{motivation}
+    Mittelpunktsregel und Simpson-Regel sind von höherer Ordnung als 
+    man es durch 
+    den Polynomgrad alleine erwarten würde, anscheinend allein durch 
+    die 
+    geschickte Wahl der Stützstellen. 
+\end{motivation}
+\begin{question}
+    Wie gut kann man werden bei optimaler Wahl der Stützstellen?
+\end{question}
+\subsection{Gauß-Quadraturformeln}
+Man sieht leicht, dass die Maximale Ordnung einer interpolierenden 
+Quadraturformel nach oben begrenzt ist
+\begin{lemma}
+    Eine obere Grenzen für die Ordnung einer interpol. Quadraturformel 
+    $I^{(n)}$ 
+    mit $n+1$ Sützstellen ist $2n+2$
+\end{lemma}
+\begin{proof}
+    Wäre Ordnung höher, könnte man alle Polynome vom Grad $2n+2$ exakt 
+    integrieren. Für das Polynom \[
+        p(x) \coloneqq \prod_{i=0}^n(x-x_i)^2 \in \Pol_{2n+2}
+    \]
+    gilt \[
+    \forall \igb i 0 n: p(x_i) = 0
+    \]
+    also \[
+        I^{(n)}(p) = 0
+    \]
+    da \[
+        I^{(n)}(p) = \dsum_{j=0}^n w_ip(x_i)
+    \]
+    aber \[
+    \forall x: p(x) \geq 0, \text{ also }p\not\equiv 0
+    \]
+    demnach \[
+        \int_a^b p(x)\diff x > 0 \lightning
+    \]    
+\end{proof}
+Man kann bei geschickter Wahl der Stützstellen also alle Polynome $p\in\Pol_{2n+1}$ exakt integrieren.
+Ein Polynom $p\in\Pol_{2n+1}$ kann man immer zerlegen in \[
+    p(x) = r(x) \cdot q(x) + s(x)\]
+mit $q\in \Pol_{n+1}$ fest vorgegeben, $\deg{q} = n+1$, $r,s\in \Pol_n$
+\end{document}

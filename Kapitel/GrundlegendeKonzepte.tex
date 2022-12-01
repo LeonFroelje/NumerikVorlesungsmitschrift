@@ -1,0 +1,209 @@
+%\documentclass{scrartcl}
+
+%\input{../Praeambel.tex}
+
+%\begin{document}
+
+Eine ''\underline{Mathematische Aufgabe}'' besteht abstrakt aus der 
+Auswertung einer Abbildung \[
+    \phi: X\to Y\quad\text{in einem $x\in X$}\quad \text{mit geeigneten Räumen }X,Y
+\]
+Beispiele \begin{itemize}
+    \item Berechnung eines Integrals: $\int_a^b f(x)dx$: \[
+    \phi_{\int}((a,b), f): X\times L^1\to \R 
+    \]
+    \item Lösung einer DGL 
+\end{itemize}
+Objekte und Auswertungen können meist nur \underline{näherungsweise} dargestellt werden, da z.B. 
+nicht jede reelle Zahl auf dem Computer exakt dargestellt werden kann. 
+\begin{itemize}
+    \item Durch nicht exakte Darstellung entstehen \underline{Rundungsfehler}
+    \item Durch vereinfachte Beschreibung komplexer Vorgänge können auch \underline{Modellfehler} 
+    enstehen
+    \item Durch ungenaue Messungen können \underline{Datenfehler} entstehen
+\end{itemize}
+Die Numerik befasst sich unter anderem mit folgenden Fragestellungen:\begin{description}
+    \item[\underline{Algorithmik}:] Angabe von Algorithmen bzw. Berechnungsverfahren zur näherungsweisen
+    Lösung von math. Aufgaben
+    \item[\underline{Konditionierung und Stabilität:}] Einfluss von Störungen(Fehlern) auf das Ergebnis
+    der math. Aufgabe oder Berechnung
+    \item[\underline{Konvergenz:}] Abschätzung des Fehlers zwischen berechneter und exakter Lösung
+    \item[\underline{Komplexität}:] Aufwand des numerischen Verfahrens
+\end{description} 
+\section{Zahlendarstellung und Rundungsfehler}
+Computer können Zahlen nur mit endlich vielen Ziffern darstellen, damit sind nicht alle reellen 
+(komplexen) Zahlen exakt darstellbar. Manche Programme können Ganzzahlen mit beliebig vielen Stellen
+oder Gleitkommazahlen mit beliebig vielen Stellen darstellen (endlich viele, auch begrenzt durch 
+Speicherplatz). Rechnungen damit werden dann jedoch sehr langsam. Meist ist die Anzahl der Stellen 
+also begrenzt, weil nur eine gewisse Anzahl an Bits/Bytes für die Darstellung einer Zahl reserviert
+ist. 1 Byte = 8 Bits, kann Ganzzahlen zwischen 0 und 255, bzw zwischen -128 bis +127, darstellen.\\ \\ 
+$\underset{1-\text{Bit}}{\underbrace{\pm}} m*b^e $, $ \ b=2$ Basis $m= 
+1. \ \underset{52-\text{Bits}}{\underbrace{m_1 \dots m_{52}}}$,\quad$ e=\underset{11-\text{Bits}}
+{\underbrace{c}}-1023$ (double-precision)\\
+Menge aller Gleitkommazahlen $=: A$ (endliche Menge)\\
+$D:= [x_{min},x_{max}] \cup {0} \cup [x_{posmin}, x_{max} $ ist der ''darstellbare Zahlenbereich'' \\
+Rundung bildet $D$ auf $A$ ab $rd:D \to A, \text{ sodass } |x-rd(x)|=\underset{y\in A}{min}|x-y|$\\
+Rundung zur nächstliegenden Zahl.\\
+\\
+IEEE : bei gleichweit entfernten Gleitkommazahlen nehme die, wo $m_{52}=0$ ist.\\
+Für eine Zahl $x=\pm m*2^e$ mit $m\in [1,2)$ ist der \underline{absolute Rundungsfehler}: $$|x-
+rd(x)| \leq 
+\frac{1}{2}*2^{-52}*2^e$$\\
+der \underline{relative Rundungsfehler} $$\frac{|x-rd(x)|}{|x|}\leq \frac{1}{2}*2^{-52}$$ ist unabhabgig von der Größe von x.
+\\
+Mit der \underline{''Maschinengenauigkeit''} einer Gleitkommadarstellung bezeichnet man den Abstand
+zwischen $1$ und der nächst größeren Gleitkommazahl.
+bei doppelt genauer Darstellung : $$
+    \text{''Epsilon'' ''Eps'', ''eps''}\coloneqq 2^{-52} \approx 2,22*10^{16}$$
+Es gilt immer : $rd(x) = rd(x(1+\varepsilon))$ für alle $|\varepsilon|\leq \frac{eps}{2}$\\
+
+Wichtig wird das Runden insbesondere auch bei den arithmetischen Operationen $+,-,*,$ \textdiv
+\\Diese werden in Computern duch Maschinenoperationen ersetzt 
+($\oplus \ominus \otimes\, \oslash$) bei denen das Ergebnis wieder eine Maschinenzahl ist.\\
+Für jede Operation $\ast\in \{+,-,*,\text{\textdiv}\}$ und $y,x \in A$ \\gilt :$$x \otimes y\in A,\ x \otimes y =(x*y)(1+\varepsilon) \text{ mit } |\varepsilon|\leq \frac{eps}{2}$$\\
+Im allgemeinen gelten die typischen Geseze nicht, also:\\
+\begin{enumerate}[i)]
+    \item $(x \otimes y) \oplus z$ ist nicht assoziativ
+    \item $(x \otimes y) \otimes z$ ist nicht distributiv
+    \item $x \oplus y =x \text{ falls } |y|\leq \displaystyle\frac{|x|}{2}eps$
+\end{enumerate}
+mit iii) kann man eps durch ausprobieren berechnen.
+(noch was von foto abschreiben)
+\section{Kondition und Stabilität}
+Einfluss von Störungen oder Fehlern auf das Ergebnis einer mathematischen Aufgabe oder eines Berechnungsverfahrens.\\
+\begin{example} Kleine Unterschiede von Werten können evtl. auf dem Rechner/ in der gewählten Zahlendarstellung gar nicht unterschieden werden. (Berechnungsverfahren)
+\end{example}
+\begin{example}
+    
+Mathematische Aufgabe: Beispiel für lineares Gleichungssystems: $x:\ Ax=b$ mit $A= \begin{pmatrix}
+1,2969 & 0,8648 \\
+0,2161 & 0,1441 
+\end{pmatrix}  $
+für $b= \begin{pmatrix}
+0,8642 \\
+0,1220 
+\end{pmatrix}  $ ist die Lösung $x= \begin{pmatrix}
+-2 \\
+2 
+\end{pmatrix}  $.
+Für $b= \begin{pmatrix}
+0,86419999 \\
+0,12200001 
+\end{pmatrix}  $ ist die Lösung $x=\begin{pmatrix}
+0,9911 \\
+-0,487 
+\end{pmatrix}  $
+\end{example}
+\begin{definition} Eine mathematische Aufgabe heißt ''schlecht konditioniert'' wenn kleine Änderungen in den Daten große relative Fehler verursachen.
+Andernfalls heißt die Aufgabe ''gut konditioniert''
+\end{definition}
+\begin{remark}Eine gute Konditionierung deiner math. Aufgabe ist notwendig, um das Problem numerisch sinnvoll lösen zu können, da Rundungsfehler sonst große Fehler verursachen können.
+\end{remark}
+Sei $ \phi : X\to Y$ eine mathematische Aufgabe\\
+\begin{definition}
+    
+Ein Verfahren oder  Algorithmus zur (näherungsweisen) Lösung der math. Aufgabe $\phi$ ist eine Abbildung $\tilde{\phi} :X\to Y$, \\
+die durch Hintereinanderschaltung endlich vieler (oder abzählbar unendlich 
+vieler) elemetarer, möglicherweise rundungsfehlerbehafteter, Rechenoperation 
+$$\phi^{(k)},\ k= 1,2,3,\dots$$ definiert ist, also $$\tilde{\phi}=\dots \circ 
+\phi^{(3)} \circ \phi^{(2)} \circ \phi^{(2)} \circ \phi^{(1)}$$
+\end{definition}
+\begin{remark} typicherweise gibt es verschiedene Algorithmen für die gleiche math. Aufgabe $\phi$. Von einem ''guten''\ Algorithmus erwartet man, dass die im Verlauf des Algorithmen akkumulierten Fehler den durch die Kondition der math. Aufgabe unvermeidbaren Fahler nicht wesentlich übersteigen.
+\end{remark}
+\begin{definition}
+     Ein Algorithmus $\tilde{\phi}$ heißt ''instabil'' , wenn es eine Störung $\tilde{x}$ von $x$ gibt so dass der durch den Rundungsfehler und Störungen verursachte relative Fehler erheblich größer ist als der nur durch die Störung verursachte Fehler, d.h. falls $\phi(x) \neq = $ und $\displaystyle\frac{|\tilde{\phi}(\tilde{x})-\phi(x)|}{|\phi(x)|}\gg \displaystyle\frac{|\phi(\tilde{x})-\phi(x)|}{|\phi(x)|} $.
+    Der Algorithmus heißt stabil, falls er nicht instabil ist. (ggf ales ''bei $x$'' oder ''für kleine $|x|$'', große $|x|$, o.ä.)
+\end{definition}
+\begin{example}
+    math. Aufgabe: $$\phi(x)=\frac{1}{x(x+1)} \ , x \in \mathbb{R}\backslash {0,-1}$$
+    Es gilt: $$\frac{1}{x(x+1)}=\frac{1}{x}-\frac{1}{x+1}$$
+    Zwei mögliche verfahren:$$\tilde{\phi}_1(x)=\frac{1}{x(x+1)}$$ ist \underline{stabil} für $x\gg 1$
+    $$\tilde{\phi}_2 (x)= \left(\frac{1}{x}\right)-\left(\frac{1}{(x+1)}\right)$$ ist 
+    \underline{instabil} für $x \gg 1$ wegen Auslöschung der Differenzbildung.
+\end{example}
+
+\section{Landau-Symbole, Genauigkeit und Komplexität}
+\begin{example}\hfill\\
+\begin{enumerate}[(a)]
+    \item $A\in\mathcal{M}_n(\mathbb{R})$ , $n$-Vektor $x\in\mathbb{R}^n \ , \ Ax=b\in\mathbb{R}^n \ , \ b_i=\sum_{j=1}^n A_{ij}x_j$\\
+    Rechnung von $Ax$ : $n^2$ Matrixmultiplikationen, $n(n-1)$ Additionen nötig.
+    $\leadsto$ Rechenaufwand etwa quadratisch in der Dimension des Gleichungssystems. (bei voll besetzter Matrix)
+
+    \item Genauigkeit der Differenzenquotienten zur Approximation der Ableitung:
+    $$\left|n'(x)\frac{n(x+h)-n(x)}{h}\right|\leq h\frac{1}{2}\underset{[x,x+h]}{max}|n''|$$ Fehler gleich Größenordnung wie Abstand h.
+        
+\end{enumerate}
+\end{example}
+\begin{definition}
+    Seien $D\subset \mathbb{R}^n$, $f,g:D\to\mathbb{R}$, und $x,x_0\in D$\\
+    Man sagt:
+    \begin{enumerate}[i)]
+        \item Die Funktion $f$ wächst für $x\to x_0$ langsamer als $g$'', geschrieben als: $f=\sigma(g)$ ''$f$ ist klein-$o$ von g''
+        \item Die Funktion ''$f$ wächst für $x\to x_0$ nicht wesentlich schneller als $g$'', geschrieben als $f=\mathcal{O}(g)$ , ''$f$ ist groß-$\mathcal{O}$ von $g$''
+        wenn $\exists c >0 \  \exists \varepsilon > 0: |f(x)| \leq c|g(x)| \ \forall x \in B_\varepsilon(x_0) |x-x_0|\leq \varepsilon$
+        \item analoge Definition für $x\to \pm \infty$
+    \end{enumerate}
+\end{definition}
+
+\begin{remark} ''Konditionierung schlecht'' bzw. ''Konditionierung instabil'' ist nicht genau definiert.\\ Was einfacher ist: Aufgabenstellung bzw. Verfahren: Falls Fehlerverstärkung bei verfahren kleiner als bei anderen, dann ist das erste Verfahren ''stabiler'', bzw. eine aufgabe ''besser konditioniert''
+\end{remark}
+
+\section{Differentielle Fehleranalyse:}
+Math. Aufgaben $\phi : X \to Y$. Ist $\phi$ (unendlich) differenzierbar, dann kann die Kondition auch mit Hilfe der Ableitungen von $\phi$ bestimmt/berechnet werden:\\
+Sei $\phi : \R \to \R$ eine Abbildung, $ x\in\R^m,\ x=(x_1,...,x_m)^T$ \\
+    $$\phi(x)=(\phi_1(x_1,...x_m),...,\phi_m(x_1,...x_m))^T$$
+    Die $\phi_i$ seinen alle zweimal stetig differenzierbar (partiell).\\
+    Damit gilt dann:  \begin{align*}\Delta y_i&=\phi_i(x+\Delta x)-\phi(x)\\
+                    &=\sum^m_{j=1}\frac{\partial\phi_i(x)}{\partial x_i}\Delta x_i + R_i(x,\Delta x) \text{ (Taylor)}\\
+                    &=\sum^m_{j=1}\frac{\partial\phi_i(x)}{\partial x_i}\Delta x_i + R_i(x,\Delta x) + \mathcal{O}(|\Delta x|^2)
+                    \end{align*}
+
+Dann folgt für den relativen Fehler: $\frac{\Delta y}{|y|}=\frac{\Delta y}{|\phi(x)|}$ \\
+
+$\displaystyle\frac{\Delta y}{y_i} = \dsum^m_{j=1}\frac{\partial\phi_j(x)}{\partial x_,}\frac{x_j}{\phi_i(x)}\frac{\Delta x_j}{x_j}$ Für $x_j\neq 0 , y_i\neq 0$\\
+$\displaystyle\frac{\Delta y}{y_i}$ Ist der relative Aufgabenfahler\\
+$\displaystyle\frac{\partial\phi_j(x)}{\partial x_,}$  $=: K_{ij}(x)$\\
+$\displaystyle\frac{\Delta x_j}{x_j}$ ist der relative Datenfehler\\
+
+\begin{definition} Die $K_{ij}(x), i=1,...,n, j=1,...,m$ heißen ''relative Konditionszahlen'' von $\phi$ in $x$ sie sind ein Maß dafür, wie sich kleine relative Fehler in den Eingangsdaten im ergebnis auswirken.
+\end{definition}
+Die Aufgabe: $y=\phi (x)$ aus $x$ zu berechnen, ist schlecht konditioniert, wenn es ein $i,j$ gibt mit $|K_{ij}(x)| \gg 1$. Ansonsten ist $\phi$ gut konditioniert.\\
+\begin{example}
+    
+ Grundoperation Addition: $\phi(x_1,x_2) = x_1+x_2$\\
+$$K_1= \frac{\partial \phi}{\partial x_1}(x)\frac{x_1}{\phi(x)}= 1*\frac{x_1}{x_1+x_2} =\frac{1}{1+\frac{x_2}{x_1}}$$
+$$K_2=\frac{\partial \phi}{\partial x_2}(x)\frac{x_2}{\phi(x)}= 1*\frac{x_2}{x_1+x_2} =\frac{1}{1+\frac{x_1}{x_2}}$$
+Für $\frac{x_1}{x_2}\approx -1$ werden die $K_i$ sehr groß, dort ist die Addition schlecht konditioniert. \\
+Das entspricht $x_1\approx -x_2$, entspricht Subtraktion von 2 Zahlen, die fest gleich groß sind.\\
+Bei Gleitkommazahlen: Übereinstimmung in den  vorderen Mantissenstellen, dadurch Genauigkeit des Resultats geringer als der Daten.\\
+\end{example}
+\begin{definition}
+Unter ''Auslöschung'' versteht man den Verlust an wesentlichen Dezimalstellen bei der Subtraktion von Zahlen gleichen Vorzeichens.
+Dies kann zu relativ großen Fehlern führen, falls eine oder beide Zahlen von operationen gerundet ($\Delta x \neq 0$) werden.
+\end{definition}
+\begin{remark}
+Doese differenzielle Fehleranalyse kann analog für einen Komplexen Algorithmus $\tilde{\phi}= \phi^{(n-1)}\circ ... \circ \phi^{(1)}$ ,
+bestehend aus einfachen Rechenoperationen $\phi^{(i)}$, durchgeführt werden, Kettenregel führt auf Ableitung der Hintereinanderschaltungen.
+Für Komplexe Algorithmen aber nicht sehr Sinnvoll durchzuführen. Man kann stattdessen versuchen statistische Methoden anzuwenden,
+in denen z.B. Rundungsfehler durch zufalllsvariablen modelliert werden, um damit Wechselwirkungen abschätzen zu können.
+\end{remark}
+\begin{example}[Rekursive Berechnung von Integralen]\hfill\\
+Aufgabe: Es sollen die folgenden Untegrale berechnet werden: $$I_1 := \frac{1}{e}\int^1_0 x^ne^x dx, \ n=0,1,2,...$$
+Berechnung mit integrationsformeln/numerische Integration: Später in Vorlesung.\\
+mit partieller integration sieht man, dass $$ I_n=1-nI_{n-1}$$
+eine Lösung ist.
+Für $$n=0 \Rightarrow I_0 = \frac{e-1}{e}\approx 0,632...$$
+Numerische Berechnung: 
+$I_0=0,632...\\
+I_5= 0,1455...\\
+I_{10}=0,0838...\\
+I_{15}=0,059...\\
+I_{20}=-30,...\\
+I_{21}=635,04\\
+I_{22}=-13970,...$\\
+Man sieht leicht: $$I_n>0, \ I_n \leq \int^1_0x^ndx=\frac{1}{n+1}$$
+Warum diese Fehler?\\
+In jedem Schritt der Rekursion wird der Fehler aus dem letzten schritt mit Faktor $-n$ multipliziert. Nach $n$ schritten mit gesamtfaktor $(-n)^n*n!$\\
+Die Fakultät wird schnell groß!
+\end{example}
+%\end{document}
