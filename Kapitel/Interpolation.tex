@@ -20,25 +20,25 @@ Es bildet
 \[\mathbb{P}_n:=\{p(x)=a_0+a_1x+a_2x^2+\dots+a_nx^n \ \mid \ a_i\in\R ,\ i=0,\dots, n\}\] Die Menge der Polynome vom Grad 
 $\leq n$\\
 $\mathbb{P}_n$ bildet einen $\R$ Vektorraum, $$(p+q)(x):=p(x)+q(x), \ (\alpha p)(x):=\alpha p(x)\  \forall \alpha\in\R,\ 
-p,q\in\Pol_n$$
+p,q\in\bbP_n$$
 Die ''Monome'' $\{1,x,x^2,\dots,x^n\}$ bilden eine Basis von $\mathbb{P}_n$, mit dim$(\mathbb{P}n)=n+1$.
 \begin{definition}
     Die Aufgabe der Polynominterpolation besteht darin, zu $n+1$ paarweise verschiedenen Punkten $x_i, i=0,\dots, n$ 
-    (''Stützstellen'', ''Knoten'') und gegebenen Knotenwerten $y_i, i=0, \dots, n$ ein Polynom $p\in\Pol$ zu bestimmen, mit 
+    (''Stützstellen'', ''Knoten'') und gegebenen Knotenwerten $y_i, i=0, \dots, n$ ein Polynom $p\in\bbP$ zu bestimmen, mit 
     der Eigenschaft: \[p(x_i) = y_i, \ i=0,\dots,n\]
 \end{definition}
 
 \begin{theorem}
-    Die Aufgabe der Polynominterpolation ist eindeutig lösbar, d.h. es gibt genau ein $p\in\Pol_n$,
+    Die Aufgabe der Polynominterpolation ist eindeutig lösbar, d.h. es gibt genau ein $p\in\bbP_n$,
     das die Bedingung erfüllt.    
 \end{theorem}
 \begin{proof}\hfill\\
 \begin{enumerate}[(a)]
-    \item Eindeutigkeit der Lösung:\\ angenommen $p\in\Pol_n$ und $q\in\Pol_n$ seien zwei Lösungen, $p(x_i)=y_i = 
-    q(x_i)$.\newline Für die Differenz $p-q\in\Pol_n$ gilt dann: \newline
-    $p-q$ hat $n+1$ Nullstellen in den $x_i, i=0,\dots, n$, aber ein $\Tilde{p}\in \Pol_n$ kann höchstens $n$ verschiedene 
+    \item Eindeutigkeit der Lösung:\\ angenommen $p\in\bbP_n$ und $q\in\bbP_n$ seien zwei Lösungen, $p(x_i)=y_i = 
+    q(x_i)$.\newline Für die Differenz $p-q\in\bbP_n$ gilt dann: \newline
+    $p-q$ hat $n+1$ Nullstellen in den $x_i, i=0,\dots, n$, aber ein $\Tilde{p}\in \bbP_n$ kann höchstens $n$ verschiedene 
     Nullstellen haben, oder es gilt $\Tilde{p}\equiv 0$ (z.B. über Satz von Rolle). Also ist $p\equiv q$, es gibt demnach 
-    höchstens eine Lösung in $\Pol_n$ 
+    höchstens eine Lösung in $\bbP_n$ 
 
     \item Existenz einer Lösung:\\
     $p(x)= a_0+a_1x+a_2x^2+\dots+a_nx^n,\ p(x_i)=y_i, \ i=0,\dots,n$\\
@@ -72,9 +72,9 @@ Das Lineare Gleichungssystem liefert im Prinzip auch eine Berechnungsmethode, is
 Lösung ist relativ aufwändig.
 
 \subsection{Lagrange-Interpolation}\hfill\\
-\subsubsection*{Idee} Wähle Basispolynome für $\Pol_n$ angepasst an die Stützstellen $x_i$, so dass das 
+\subsubsection*{Idee} Wähle Basispolynome für $\bbP_n$ angepasst an die Stützstellen $x_i$, so dass das 
 Interpolationspolynom damit aus den Werten $y_i$ leicht bestimmt werden kann. Man kann 
-recht einfach Polynome $L_i^{(n)}\in\Pol_n$ konstruieren, die in genau einem Stützpunkt $x_i = 1$ sind und 
+recht einfach Polynome $L_i^{(n)}\in\bbP_n$ konstruieren, die in genau einem Stützpunkt $x_i = 1$ sind und 
 in allen anderen Stützpunkten = 0. $$L_i^{(n)}(x_i) = \left(\begin{cases}
     1& i=j\\ 0& \text{sonst}
 \end{cases}\right) = \delta_{ij}$$
@@ -82,7 +82,7 @@ in allen anderen Stützpunkten = 0. $$L_i^{(n)}(x_i) = \left(\begin{cases}
  i}(x_i-x_j)}$$
 Diese $L_i^{(n)}, i=0, \dots, n$ heißen ''Lagrange-Basispolynome'' zu Stützstellen $x_0,\dots,x_n$.
 
-Linear unabhängig: leicht zu sehen: Alle $L_j^{(n)}(x_i) = 0$. Anzahl ist gleich $\dim \Pol_n$
+Linear unabhängig: leicht zu sehen: Alle $L_j^{(n)}(x_i) = 0$. Anzahl ist gleich $\dim \bbP_n$
 
 \begin{example} $n=1\  x_0,x_1$ \\
 \includegraphics[width=45mm]{../Bilder/x_1_2.png}\\
@@ -115,7 +115,7 @@ Eine Polynombasis, die auch zu den Stützstellen passt, aber leicht erweiterbar 
     N_i(x) &\coloneqq \displaystyle\prod_{j=0}^{i-1}(x-x_j), \ i=1,\dots,n
 \end{align*}
 \[
-    \text{Grad}(N_i) = i \implies (N_i) \text{ linear unabhängig},\ \lin{N_0,\dots,N_i} = \Pol_i, \text{ (Basis von }\Pol_i)
+    \text{Grad}(N_i) = i \implies (N_i) \text{ linear unabhängig},\ \lin{N_0,\dots,N_i} = \bbP_i, \text{ (Basis von }\bbP_i)
 \]
 Damit kann auch das Interpolationspolynom $p$, $p(x_i)=y_i, \ i=0,\dots,n$ in dieser Basis dargestellt werden, 
 $p=\sum^n_{i=0}a_iN_i$\\
@@ -255,7 +255,7 @@ f(x)-p(x)=\frac{f^{(n+1)}(\xi_x)}{(n+1)!}\cdot\prod^n_{j=0}(x-x_j)
     &\implies \text{ $F^{(n+1)}$ hat mindestens $1$ Nullstelle in $\tilde{I}\eqqcolon \xi_x$ }
     \end{align*}
     und es ist \[
-        0 = F^{(n+1)}(\xi_x) = f^{(n+1)}(\xi_x) - \underset{=0, \text{ da } p\in\Pol_n}{\underbrace{P^{(n+1)}(\xi_x)}} - 
+        0 = F^{(n+1)}(\xi_x) = f^{(n+1)}(\xi_x) - \underset{=0, \text{ da } p\in\bbP_n}{\underbrace{P^{(n+1)}(\xi_x)}} - 
         c(x) \cdot \underset{=(n+1)!}{\underbrace{g^{(n+1)}(\xi_x)}}\]
     \[
         \frac{f(x) - p(x)}{g(x)} \cdot (n+1)! = f^{(n+1)}(\xi_x) \implies f(x)-p(x) = \frac{f^{(n+1)}(\xi_x)}{(n+1)!}\cdot 
@@ -269,7 +269,7 @@ f(x)-p(x)=\frac{f^{(n+1)}(\xi_x)}{(n+1)!}\cdot\prod^n_{j=0}(x-x_j)
     Ist $f \in C^\infty(I)$ und es gebe ein $M<\infty$ so, dass \[
     \abs{f^{(n)}(x)} \leq M\midspace \forall n \in \N \text{ und }x\in I 
     \]
-    dann Konvergiert die Folge der Interpolationspolynome $p_n\in\Pol_n$ zu $f$ mit beliebigen disjunkten Stützpunkten
+    dann Konvergiert die Folge der Interpolationspolynome $p_n\in\bbP_n$ zu $f$ mit beliebigen disjunkten Stützpunkten
     $x_0,\dots,x_n \in I$ auf $I$ gleichmäßig gegen $f$
 \end{corollary}
 \begin{proof}
@@ -353,7 +353,7 @@ Man kann zeigen, es gilt spezielle paarweise verschiedene Stützstellen, die $|W
     Polynoms"\smallspace $T_{n+1}$\\
     
 \end{theorem}
-\begin{remark}[Optimales $w\in\Pol_{n+1}$?]\hfill\\
+\begin{remark}[Optimales $w\in\bbP_{n+1}$?]\hfill\\
 \includegraphics[width=\linewidth]{Bilder/abb1.png}
     Diese Tschebyscheff-Polynome sind für $k\in \N_0$ definiert als \[
     T_k(x)\coloneqq \cos{k\cdot \arccos{x}}
@@ -387,7 +387,7 @@ Nicht nur Funktionswerte vorgegeben, sondern ggf. auch Ableitungen, evtl. auch h
     \underline{Gegeben:}\\ Stützstellen $x_i, \ i=0,\dots , m$ paarweise verschieden.\\
            \qquad Werte $y_i^{(k)}, \ i=0,\dots , m\ \ k=0,\dots, \mu_i \geq 0$\\
             
-    \underline{Gesucht:} Polynom $p\in\Pol_n,\ n\sum_{i=0}^{m}\mu_i$ mit $p^{(k)}(x_i)=y_i^{(x)},\ i=0,\dots,m \ \ 
+    \underline{Gesucht:} Polynom $p\in\bbP_n,\ n\sum_{i=0}^{m}\mu_i$ mit $p^{(k)}(x_i)=y_i^{(x)},\ i=0,\dots,m \ \ 
     k=0,\dots,\mu_i$\\
     Die $x_i$ werden manchmal auch als $\mu_i$-fache Stützstellen bezeichnet.
 \end{definition}
@@ -416,7 +416,7 @@ Nicht nur Funktionswerte vorgegeben, sondern ggf. auch Ableitungen, evtl. auch h
 \end{proof}
 \begin{remark}
     Eine ähnliche Aufgabe bei der in Stützstellen eventuell nur \underline{einige} Ableitungen vorgegeben sind, z.B. \[
-    p\in\Pol_2: p(x_0) = y_0, p''(x_1) = y_1^{(2)}, p''(x_2)=y_2^{(2)}
+    p\in\bbP_2: p(x_0) = y_0, p''(x_1) = y_1^{(2)}, p''(x_2)=y_2^{(2)}
     \] 
     ist im allgemeinen \underline{nicht} oder \underline{nicht eindeutig} lösbar
 \end{remark}
@@ -455,7 +455,7 @@ Differenzen verallgemeinert:\\
 
 A8: Stückweise Hermite-Interpolation: Werte $y^{(0)}_i,y_i{(^)}$ auf $I_i=[x_{i-1},x_i]$, $i=1,\dots,m: $
 \begin{example}
-    Gesucht ist ein $p$ mit $p\in\Pol_4$, $\begin{cases}
+    Gesucht ist ein $p$ mit $p\in\bbP_4$, $\begin{cases}
         p(0)=-1, \ p'(0)= -2\\
         p(1)=0, \ p'(1)=10, \ p''(1)=40
     \end{cases}$
@@ -488,7 +488,7 @@ $\R$ bzw. $I$) definierte Polynome, sondern nur \underline{stückweise auf jedem
 sortiert) und verwende zusätzliche Übergangsbedingungen: Für $\coloneqq x_0<x_1<\dots<x_m=b$ und $I_i=\coloneqq[x_{i-
 1},x_i], \ i=1,\dots,n$ ist der entsprechende Funktionsraum dann:\\
 \[
-    S_{\text{li}}^{(k,r)}[a,b] \coloneqq \set{s\in C^{(r)}[a,b]\colon\  s\vert_{I_i} \in \Pol_k, \ i=1,\dots,n }
+    S_{\text{li}}^{(k,r)}[a,b] \coloneqq \set{s\in C^{(r)}[a,b]\colon\  s\vert_{I_i} \in \bbP_k, \ i=1,\dots,n }
 \]
 ($r$-mal stetig diffbar, lokale Polynome vom Grad $\leq k$)
 
@@ -500,10 +500,10 @@ sortiert) und verwende zusätzliche Übergangsbedingungen: Für $\coloneqq x_0<x
 %ich hab aber welche lol cucumber emoji water dropplet emoji \kmujnzhbtgvrfcdsa \frownie
 \begin{example}
     Stückweise lineare Interpolation: \[
-    S_{\text{li}}^{(1,0)}[a,b] = \set{s\in C^{(0)}[a,b]\colon s\vert_{I_i}\in \Pol_1 }
+    S_{\text{li}}^{(1,0)}[a,b] = \set{s\in C^{(0)}[a,b]\colon s\vert_{I_i}\in \bbP_1 }
     \]
     Sind Werte $y_i$ an den Stützstellen $x_i$ vorgegeben, dann ist durch die Vorgabe der Werte in dem Endpunkten jedes 
-    Teilintervalls $I_i$ genau ein Polynom $p_i\in\Pol_1$ festgelegt. Stetigkeit über die Intervallgrenzen ergibt sich 
+    Teilintervalls $I_i$ genau ein Polynom $p_i\in\bbP_1$ festgelegt. Stetigkeit über die Intervallgrenzen ergibt sich 
     dadurch, dass sowohl $p_i(x_i)$ und $p_{i+1}(x_i)$ den Gleichen Wert $y_i$ haben. Der Graph der Funktion $s$ ist 
     gerade der Polygonzug mit Eckpunkten $(x_i, y_i),\ i=0,\dots, n$. Auf $I_i$ ist $s\vert_{I_i}$ gereade das 
     Interpolationspolynom zu $(x_{i-1}, y_{i-1}), (x_i, y_i)$. Also haben wir die Fehlerabschätzung für Interpolation einer
@@ -528,15 +528,15 @@ sortiert) und verwende zusätzliche Übergangsbedingungen: Für $\coloneqq x_0<x
 ''\underline{Kubische Splines}'' : Im gegensatz zu den Hermite-Splines, sollen hier nur \\ die Werte $s(x_i)=y_i,\ 
 i=0,\dots, n$ 
 vorgegeben werden, dafür soll der Spline insgesammt glatter sein:\[
-s\in S_h^{(3,2)}[a,b]=\left\{s\in C^2[a,b]\colon s\vert_{I_i}\in \Pol_3 , \ i=1,\dots, n\right\}\]
+s\in S_h^{(3,2)}[a,b]=\left\{s\in C^2[a,b]\colon s\vert_{I_i}\in \bbP_3 , \ i=1,\dots, n\right\}\]
 \begin{question}[Kann das überhaupt Funktionieren?]\hfill\\
-    $S\vert{I_i}\in \Pol_3$, $s'\vert_{I_i}\in\Pol_2$, $s''\vert_{I_i}\in\Pol_1$, $s''\vert_{I_i}\in\Pol_0$, konstant.
+    $S\vert{I_i}\in \bbP_3$, $s'\vert_{I_i}\in\bbP_2$, $s''\vert_{I_i}\in\bbP_1$, $s''\vert_{I_i}\in\bbP_0$, konstant.
     Es gilt \[
         s \in C^2[a,b] \implies s'' \text{ ist Polygonzug auf }[a,b]
     \]
     Wieviel Bedingungen ergeben sich? Wieviel Freiheitsgerade gibt es?
     \begin{align*}
-        n &\text{ Teilintervalle } I_i,\ s\vert_{I_i}=P_i\in\Pol_3 \to \ &&4\cdot n\ \text{Koeffizienten ''frei''}\\
+        n &\text{ Teilintervalle } I_i,\ s\vert_{I_i}=P_i\in\bbP_3 \to \ &&4\cdot n\ \text{Koeffizienten ''frei''}\\
     s(x_i^-)&=y_i,\ i=0\dots,n \ &&n+1\quad \text{Bedingungen}\\
         s(x_i^-)&=s(x_i^+),\ i=1\dots,n-1 \qquad &&n-1 \\
         s'(x_i^-)&=s'(x_i^-),  \ &&n-1 \\
@@ -584,7 +584,7 @@ s\in S_h^{(3,2)}[a,b]=\left\{s\in C^2[a,b]\colon s\vert_{I_i}\in \Pol_3 , \ i=1,
               \text{\PHpedestrian} &= \int_a^b (f'')^2 dx - 2 \int_a^b(f'' - s'')s'' dx - \int_a^b (s'')^2 dx
     \end{align*}
     Mittlerer Term = 0 ?!?!?!?!?!?!?\begin{align*}
-        \int_a^b(f'' - s'') s'' dx &= \dsum_{i=1}^n \int_{I_i}(f'' - s'')\underset{\in \Pol_3 \subset C^\infty}
+        \int_a^b(f'' - s'') s'' dx &= \dsum_{i=1}^n \int_{I_i}(f'' - s'')\underset{\in \bbP_3 \subset C^\infty}
         {\underbrace{s''\vert_{I_i}}} dx\\
         &= \dsum_{i=1}^n\left([f'-s']_x{i-1}^{x_i} - \underset{=s'''\vert_{I_i} \int_{I_i}(f-s)'dx}{\underbrace{\int_{I_i}
         (f'-s')\underset{\text{konstant auf $I_i$}}
@@ -600,7 +600,7 @@ s\in S_h^{(3,2)}[a,b]=\left\{s\in C^2[a,b]\colon s\vert_{I_i}\in \Pol_3 , \ i=1,
     \begin{align*}
         E(s-\Tilde{s})= E(s)-E(\Tilde{s})=0\text{ (wie oben) } &\Rightarrow \int_a^b(s''-\Ts'')^2(x)dx = 0 \\
         &\Rightarrow (s-\Ts)''(x)\ \forall x\in [a,b]\\
-        &\rightarrow (s-\Ts)\in\Pol_1[a,b], \ s(x)-\Ts(x)=a_0+a_1x\\
+        &\rightarrow (s-\Ts)\in\bbP_1[a,b], \ s(x)-\Ts(x)=a_0+a_1x\\
         &\ \ s(x_i)=\Ts(x_i),\ i=0,\dots,n \\
         &\Rightarrow s(x)-\Ts(x)\equiv 0
     \end{align*} 
@@ -616,7 +616,7 @@ s\in S_h^{(3,2)}[a,b]=\left\{s\in C^2[a,b]\colon s\vert_{I_i}\in \Pol_3 , \ i=1,
 
 \begin{proof} (Ein Konstruktiver Existenzbeweis)\hfill\\
 Wie oben: \[
-s\vert_{I_i}\in\Pol_3 \leadsto s''\vert_{I_i}\in\Pol_1,\ s'' \text{ stetig }\leadsto s''\text{ Polygonzug}.
+s\vert_{I_i}\in\bbP_3 \leadsto s''\vert_{I_i}\in\bbP_1,\ s'' \text{ stetig }\leadsto s''\text{ Polygonzug}.
 \]
 Sei 
 \begin{align*}
@@ -682,7 +682,7 @@ eindeutige Lösung\begin{definition}
         \item Für ''\underline{periodische Splines}'' \(s(x_i)=f_i, i=0,\dots,n,\ \) mit \(f_0=f_n,\ s'(x_0)=s'(x_n),\ 
         s''(x_0)=s''(x_n)\)
         \item Für ''\underline{not-a-Knot-Splines}'' \(s(x_i)=f_i, i=0,\dots,n,\) \(s'''\) stetig in \(x_1\) und 
-        \(x_{n-1}\) \(\Rightarrow\) \(s\vert_{I_1\cup I_2}\in\Pol_3,\ S\vert_{I_{n-1}\cup I_n}\in\Pol_3\)
+        \(x_{n-1}\) \(\Rightarrow\) \(s\vert_{I_1\cup I_2}\in\bbP_3,\ S\vert_{I_{n-1}\cup I_n}\in\bbP_3\)
     \end{enumerate}
     sind stets \underline{eindeutig lösbar}.\\
     \textit{(kein neuer Beweis, ähnliche Beweise für ii), iii) iv))}
@@ -703,7 +703,7 @@ eindeutige Lösung\begin{definition}
     zu $f-s$. Die Interpolations-Fehlerabschätzung liefert\[
         \dabs{(f-s) - p_0}_{\max I_i} = \dabs{f-s}_{\max I_i} \leq \frac{1}{2}h_i^2\dabs{(f-s)''}_{\max I_i} = \frac{1}
         {2}h_i^2\dabs{f''-s''}_{\max I_i}\]
-    Sei nun $p_i\in \Pol_1$ das Polynom, das $f''(x_{i-1})$ und $f''(x_i)$ interpoliert. Dann ist \begin{align*}
+    Sei nun $p_i\in \bbP_1$ das Polynom, das $f''(x_{i-1})$ und $f''(x_i)$ interpoliert. Dann ist \begin{align*}
         \dabs{f'' - s''}_{\max I_i} &\leq \dabs{f'' - p_i}_{\max I_i} + \dabs{p_i - s''}_{\max I_i}\\
                                     &\leq \frac{1}{2}h_i^2\dabs{f^{(4)}}_{\max I_i} + \max\limits_{j = i-1, i}\abs{f''(x_j) 
                                     - s''(x_j)}
@@ -779,9 +779,9 @@ Diskrete Fourier Transformation lässt sich auf Polynom-Interpolation zurückfü
 \end{center}
 Dann ist DFT gerade \[
     t_n(x) = \dsum_{j=0}^{n-1}\frac{\hat{a_j}}{n}\cdot e^{ijx} = \dsum_{j=0}^{n-1}\frac{\hat{a_j}}{n}w^j = p(w), 
-    \largespace \text{mit } p\in \Pol_{n-1}
+    \largespace \text{mit } p\in \bbP_{n-1}
 \]
-Polynominterpolation wie in 2.1 - 2.3 geht ganz genau so f+r Komplexwertige Polynome \(p\in\Pol_n[\C]\). Daraus folgt
+Polynominterpolation wie in 2.1 - 2.3 geht ganz genau so f+r Komplexwertige Polynome \(p\in\bbP_n[\C]\). Daraus folgt
 die Existenz und Eindeutigkeit eines \underline{interpolierenden Polynoms} für Werte \(a_k\) an Punkten \(w_k, \ \igb{k}
 {0}{n-1}\). Berechnung der Fourierkoeffizienten \(\hat{a_j}\) nicht über Polynom-Methode, sondern entsprechend obiger Formel,
 bzw. über ''\underline{Fast Fourier Transformation}'', mit Aufwand \(\calO{n\cdot\log n}\) statt\(\calO{n^2}\). \\

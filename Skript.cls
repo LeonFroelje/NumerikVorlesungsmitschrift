@@ -42,7 +42,9 @@
     linktoc=all
 }
 
-
+\newcommand{\midspace}{\hspace{.5em}}
+\newcommand{\smallspace}{\hspace{.2em}}
+\newcommand{\largespace}{\hspace{1em}}
 \newcommand{\dsum}{\displaystyle\sum}
 \newcommand{\K}{\mathbb{K}}
 \newcommand{\Z}{\mathbb{Z}}
@@ -60,26 +62,25 @@
 \newcommand{\Bild}[1]{\ensuremath{\text{Bild}\left(#1\right)}}
 \newcommand{\rang}[1]{\ensuremath{\text{Rang}\left(#1\right)}}
 \newcommand{\F}{\mathbb{F}}
-\newcommand{\Pol}{\mathbb{P}}
+\newcommand{\bbP}{\mathbb{P}}
 \newcommand{\toInfty}{\ensuremath{\lim_{n\to\infty}}}
 \newcommand{\RN}[1]{\textup{\uppercase\expandafter{\romannumeral#1}}}
 \newcommand{\matrx}[1]{\begin{pmatrix}#1\end{pmatrix}}
 \newcommand{\set}[1]{\ensuremath{\left\{ #1 \right\}}}
 \newcommand{\abs}[1]{\ensuremath{\left\vert #1 \right\vert}}
 \newcommand{\dabs}[1]{\ensuremath{\left\vert\left\vert#1\right\vert\right\vert}}
-\newcommand{\scp}[1]{\ensuremath{\left<#1\right>}}
+\newcommand{\scp}[2]{\ensuremath{\left<#1,\smallspace #2\right>}}
 \newcommand{\dbcup}[2][]{\ensuremath{\displaystyle\bigcup_{#1}^{#2}}}
 \newcommand{\dbcap}[2][]{\ensuremath{\displaystyle\bigcap_{#2}^{#1}}}
 \newcommand{\cconj}[1]{\overline{#1}}
 \newcommand{\sym}{\ensuremath{\text{Sym }}}
-\newcommand{\midspace}{\hspace{.5em}}
-\newcommand{\smallspace}{\hspace{.2em}}
-\newcommand{\largespace}{\hspace{1em}}
 \newcommand{\txt}[1]{\ensuremath{\text{#1}}}
 \newcommand{\dprod}{\ensuremath{\displaystyle\prod}}
 \newcommand{\eps}{\varepsilon}
 \def\igb#1#2#3{\ensuremath{#1 = #2,\dots, #3}}
 \newcommand*\diff{\mathop{}\!\mathrm{d}}
+\newcommand{\tjadosize}{\tiny}
+\newcommand{\Tjadosize}{\Huge}
 
 
 \newcount\loopcounter
@@ -90,7 +91,7 @@
 \def\cos#1{\ensuremath{\text{cos}\if \empty#1\else\left(#1\right)\fi}}
 \def\sin#1{\ensuremath{\text{sin}\if \empty#1\else\left(#1\right)\fi}}
 \def\calO#1{\ensuremath{\mathcal{O}\if \empty#1\else\left(#1\right)\fi}}
-
+\def\Pol#1{\ensuremath{\if \empty#1\bbP \else\bbP_{#1}\fi}}
 \renewenvironment{proof}{{\bfseries Beweis}}{\qed\newline}
 
 \theoremstyle{definition}
