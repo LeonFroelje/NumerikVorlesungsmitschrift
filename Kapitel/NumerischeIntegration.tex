@@ -1,6 +1,4 @@
-\documentclass[11pt,a4paper,oneside]{scrartcl}
-
-\input{../Praeambel.tex}
+\documentclass{../Skript}
 
 \begin{document}
 \section{Numerische Integration}
@@ -375,30 +373,113 @@ dann eine Fehlerabschätzung \begin{align*}
     Bei Halbierung der Teilintervalllängen reduziert sich der Quadraturfehler also um 
     Faktor $\left(\frac{1}{2}\right)^{2n+2}$.
 % WIR MÜSSEN IN DIE KLAMMER SCHREIBEN
-\section{Richardson-Extrapolation}
+\subsection{Richardson-Extrapolation}
 Eine Idee/Methode, die man auch in anderen Situationen gut und gerne anwenden 
 kann:\\
 Angenommen Berechnungsvorschrift mit Diskretisierungsgröße $h > 0$, $h\searrow 0$
 so, dass wir für die Approximation einer Größe $E_0$ eine \underline{Entwicklung}
 der berechneten Größe $E(h)$ haben der Form \[
-    E(h)  = E_0 + c_1h^{k_1}+c_2h^{k_2} \in \calO{h^{k_2}}\text{ mit }0<k_1<k_2
+    E(h)  = E_0 + c_1h^{K_1}+c_2h^{K_2} \in \calO{h^{K_2}}\text{ mit }0<k_1<k_2
 \] 
 Dann können wir Berechnungen mit zwei verschiedenen qDiskretisierungen $h_1 > h_2 
-> 0$ durchführen, und mit diesen Ergebnissen die Ordnung $h^{k_1}$ eliminieren
+> 0$ durchführen, und mit diesen Ergebnissen die Ordnung $h^{K_1}$ eliminieren
+\begin{align*}
+    E(h_1)&=E_0+c_1h_1^{K_1}+c_2h_1^{K_2}\qquad \vert\cdot h_2^{K_1}\\
+    E(h_2)&=E_0+c_1h_2^{K_1}+c_2h_2^{K_2}\qquad \vert\cdot h_1^{K_1}\\
+    h_1^{K_1}E(h_2)-h_2^{K_1}E(h_1)&=(h_1^{K_1}-h_2^{K_1})E_0+c_1\cdot0+c_2(h_1^{K_1}h_2^{K_2}-h_2^{K_1}h_1^{K_2})\\
+    \frac{ h_1^{K_1}E(h_2)-h_2^{K_1}E(h_1)}{h_1^{K_1}-h_2^{K_1}}&= E_0+c_2\frac{h_1^{K_1}h_2^{K_2}-h_2^{K_1}h_1^{K_2}}{h_1^{K_1}-h_2^{K_1}}\\
+    \intertext{\(h_2=dh_1\)}
+    \frac{h_1^{K_1}(E(h_2)-d^{K_1}E(h_1))}{h_1^{K_1}(1-d^{K_1})}&= E_0+c_2\frac{(d^{K_2}-d^{K_1})h_1^{K_1+K_2}}{h_1^{K_1}(1-d^{K_1})}\\
+    \Rightarrow \frac{E(h_2)-d^{K_1}E(h_1)}{1-d^{K_1}}&= E_0+c_2\frac{d^{K_2}-d^{K_1}}{1-d^{K_1}}h_1^{K_2}
+\end{align*}
+Durch geschickte Kombination erhalten wir eine Approximation der Ordnung \(\calO{h^{K_2}}\) auch ohne \(K_2\) explizit zu kennen.
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\subsubsection*{Anwendung auf numerische Integration}
+Wir kennen (falls die uzu integrierende Funktion glatt genug ist) die führenden
+Ordnungen des Quadraturfehlers vieler interpolierender Quadraturformeln. Durch 
+geeignete Kombination von Integrationen mit gleichlangen Teilintervallen mit 
+Längen $h_1, h_2$ erreicht man dann eine Approximation des Integrals $I(f)$ von 
+besserer Ordnung. Hat man eine weitergehende Entwicklung wie \[
+    E(h) = E_0 + c_1h^{K_1} + c_2 h^{K_2} + c_3h^{K_3}\dots\]
+können entsprechend auch weiter höhere Ordnungen eliminiert werden, indem 
+genügend verschiedene Berechnungen mit verschiedenen $h$'s durchgeführt werden. 
+\begin{example}
+    \hfill
+    \begin{center}
+        \includegraphics[width=\linewidth]{../Bilder/051222_1.png}
+    \end{center}
+\end{example}
+%%%%
+Für die summierte Trapezregel auf einer gleichmäßigen Zerlegung mit Teilintervallen der Länge \(h=\frac{b-a}{N},\ x_i=a+ih,\ i=1,\dots,N\)
+kann man zeigen:
+\begin{theorem}[''\underline{Euler-Maclaurinsche Summenformel}'']\hfill\\
+    Ist \(f\in C^{2m+2}[a,b]\) und \[
+    a(h)\left(\frac{1}{2}f(a)+\sum^{N-1}_{i=1}f(x_i)+\frac{1}{2}f(b)\right)\]
+    das Ergebnis der summierten Trapezregel.\\
+    Darum gilt die Entwicklung
+    \newpage
+    \[
+        \int^b_af(x)\diff x = 
+        a(h)-\sum_{k=1}^m\left[h^{2k}\frac{B_{2k}}{(2k)!}\left(f^{(2k-1)}(b)-f^{(2k-1)}(a)\right)\right]-h^{2m+2}\frac{(b-a)}{(2m+2)!}B_{2m+2}\cdot f^{(2m+2)}(\xi)        
+    \]
+    mit $\xi\in[a,b]$ und den ''Bernoulli-Zahlen'' $B_j$, \[
+        B_0 = 1, \midspace B_k = -\sum_{j=0}^{k-1}\frac{k!}{j!(k-j-1)!}B_j
+    \]
+    oder auch \[
+        \frac{x}{e^x - 1} = \sum_{j=0}^\infty \frac{B_j}{j!}x^j
+    \]
+    (ohne Beweis)
+\end{theorem}
 
+Damit ergibt sich eine Entwicklung des Quadraturfehlers in \underline{gerade
+ $h$-Potenzen} $h^2, h^4, h^6, \dots$, falls $f$ glatt genug ist.\\
+Dies kann genutzt werden, um aus Werten für verschiedene $h_l$ 
+eine immer bessere Approximation des Integrals zu berechnen.\\
+\underline{''Romberg-Integration''}:\\
+Anwendung für $h_l \coloneqq \frac{h_0}{2l}, \ \igb l 0 {}$:\[
+    h_0,\frac{h_0}{2},\frac{h_0}{4},\frac{h_0}{8},\dots\]
+\begin{description}
+    \item[Vorteil:] Wiederverwendung der Funktionswerte $f(x_j)$ aus den 
+    vorherigen Zerlegungen möglich.
+    \item[Nachteil:] Im $l$-ten Schritt müssten $2^l$ Operationen durchgeführt 
+    werden, wir mit steigenden $l$ relativ schnell groß 
+\end{description} 
+\begin{remark}
+    Folge $h,\frac{h}{2},\frac{h}{4},\frac{h}{8},\dots$ heißt auch \underline{
+        ''Romberg-Folge''
+    }
+\end{remark}
+Extrapolation kann nicht nur zur Verbesserung des Berechnungsprozesses, sondern
+auch zur numerischen Abschätzung des Fehlers genutzt werden:\\ Abschätzungen wie
+\[
+\vert I(f)-I_h^{(1)}(f)\vert \leq\frac{b-a}{12}\cdot h^2\vert\vert f''\vert\vert_{\max}
+\]
+sind i.A. nicht auswertbar oder liefern zu grobe Ergebnisse. Falls eine Tolranz
+für die Berechnung vorgegeben ist, nützt das z.B. wenig. \\
+Legt man eine Entwicklung des Fehlers zugrunde, wie oben getan, dann kann man
+auch versuchen aus \(2\) Berechnungen den Fehler sowie eine optimale 
+Diskretisierung abzuschätzen. Für \begin{align*}
+    E(h_1) &= E_0 + c_1h_1^{K_1}+c_2h_1^{K_2}, \largespace \text{Rechnung mit }h_1,
+    h_2 = \frac{h_1}{2}\\
+    E(h_2) &= E_0 + c_1\left(\frac{h_1}{2}\right)^{K_1} + c_2\left(\frac{h_1}{2}\right)^{K_2}
+\end{align*}
+Also \[
+    E(h) - E\left(\frac{h}{2}\right) = c_1\cdot\left(1-\frac{1}{2^{K_1}}\right) h_1^{K_1} + \calO{h_1^{K_2}}\]
+somit \[
+    c_1 = \frac{E(h) - E\left(\frac{h}{2}\right)}{1-\frac{1}{2^{K_1}}}h_1^{-K_1} + \calO{h_1^{K_2-K_1}}\largespace k_2-k_1 > 0\]
+Schaut man für den Fehler nur die führende Ordnung an, $E(h) - E_0 \approx c_1h_1^{K_1}$, 
+dann ist \[
+    E(h) - E_0 \approx \frac{E(h) - E\left(\frac{h}{2}\right)}{1-\frac{1}{2^{K_1}}}\] 
+Ist eine Toleranz TOL für den Fehler vorgegeben, dann ist die dazu passende Gitterweite
+\def\hopt{\ensuremath{h_{\text{opt}}}}
 
-
-
-
-
-
-
-\tjadosize\Schwamms{20}
-
-
-
+$\hopt$ durch TOL$\approx c_1 \hopt^{K_1}$ bestimmt, also \[
+    \hopt = \left(\frac{\text{TOL}}{c_1}\right)^{\frac{1}{K_1}}\]
+''\underline{a-posteriori}''-Fehlerabschätzung, ''im Nachhinein'', aus numerischen Resultaten 
+versuchen, den Fehler abzuschätzen\\
+''\underline{a-priori}'': Im Vorhinein, Abschätzung durch Daten etc, ohne vorherige Berechnung
 
 
 }
