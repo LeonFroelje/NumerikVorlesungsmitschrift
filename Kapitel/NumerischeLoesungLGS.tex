@@ -1,0 +1,732 @@
+\documentclass[../Skript.tex]{subfiles}
+\graphicspath{{\subfix{../images/}}}
+\begin{document}
+
+\underline{\textbf{Aufgabe}:} Zu gegebener Matrix $A\in\R^{n\times n}$ 
+und rechter Seite $b\in \R^n$
+ist ein $x\in \R^n$ gesucht, so dass $Ax=b$ gilt.
+\begin{theorem}
+    Sei $n\in \N$, $A\in \R^{n\times n}$ mit $\det{A} \neq 0$. Dann 
+    existiert
+    zu jedem $b\in \R^n$ \underline{genau ein} $x\in \R^n$ so, dass 
+    $Ax=b$.
+\end{theorem}
+\begin{proof}
+    Lineare Abbildung zu Matrxi $A$ ist bijektiv, wenn $\det A \neq 0$. 
+    Dann existiert auch
+    die inverse Matrix $A^{-1}$ und $x=A^{-1}b$
+\end{proof}
+
+Berechnung der Lösung?
+\begin{description}
+    \item[''\underline{Direkte Verfahren}'':]\ berechne \(x\) (bis auf 
+    Rundungsfehler, Zahlendarstellung \dots )
+    \item[''\underline{Iterative verfahren}'':]\ ausgehend von \(x_0 \in 
+    \R^n\) berechne Folge \(x_1, x_2, \dots ,\in \R^n\) und \(x_i\to x 
+    (i\to \infty\)
+    bzw. \(x_1,\dots,x_N\in\R^N\) mit \(\vert\vert x_N-x\vert\vert\leq 
+    TOL\)
+\end{description}
+Jetzt:
+\section{Direkte Verfahren}
+Es gibt einige spezielle Matrizen, für die sich die Lösung einfach 
+berechnen lässt:
+\begin{description}
+    \item[Diagonalmatrizen:]\[
+    A=\begin{pmatrix}
+        a_{11} &\ & 0 \\
+        \ & \ddots & \ \\
+        0 & \ & a_{NN}
+    \end{pmatrix} \Rightarrow x_i=\frac{b_i}{a_{ii}}\quad a_{ii}\neq 0, 
+    \text{ wenn }\det A\neq 0, \text{ für alle } i=1,\dots,n
+    \]
+            \item[Dreiecksmatrizen] \begin{definition}
+            Eine Matrix $A\in \R^{n\times n}$ heißt \underline{rechte 
+            obere Dreiecksmatrix}, wenn \[
+                \forall j < i : a_{ij} = 0, a_{ii} \neq 0, \ \igb i 1 n\]
+        \end{definition}
+        Bei einer oberen Dreiecksmatrix lässt sich das lineare 
+        Gleichungssystem einfach 
+        \underline{von unten nach oben} auflösen:\begin{align*}
+            x_{11} =  \frac{b_n}{a_{nn}}, \midspace x_i = \frac{1}{a_{ii}}
+            \left(b_i - \sum_{j>i}a_{ij}b_j\right), \largespace \igb{i}
+            {n-1}1
+        \end{align*}
+        \begin{definition}
+            Eine Matrix $A\in \R^{n\times n}$ heißt \underline{linke 
+            untere Dreiecksmatrix}, wenn \[
+                \forall j > i : a_{ij} = 0, a_{ii} \neq 0, \ \igb i 1 n\]
+        \end{definition}
+        \underline{auflösen}:\[
+            x_i = \frac{b_1}{a_{11}}, \ x_i = \frac{1}{a_{ii}}\left(b_i - 
+            \sum_{j < i}a_{ij}b_j\right),\largespace \igb i 2 n\]
+        \item[Produkte aus Dreiecksmatrizen] z.B. \(A=L\cdot R\)\\ \(Ax=b 
+        \Leftrightarrow L\cdot \underset{y}{\underbrace{Rx}} = 
+        b\Leftrightarrow \begin{cases}
+            Ly &= b \\
+            Rx &= y
+        \end{cases}\) 
+\end{description}
+
+\begin{definition}
+    Die Zerlegung einer Matrix \(A\in\R^{n\times n}\) in ein Produkt 
+    \(A=LR\) mit linker unterer Dreiecksmatrix \(L\) und oberer rechter 
+    Dreiecksmatrix \(R\) löst ''\underline{\(LR\)-Zerlegung}''
+\end{definition}
+\begin{remark}
+    Im englischen: ''LU-decomposition'', $L$: lower, $U$: upper
+\end{remark}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{LR-Zerlegung einer Matrix}\begin{remark}
+    Nicht jede reguläre Matrix $A$ mit $\det{A} \neq 0$ besitzt eine LR-
+    Zerlegung.
+\end{remark}
+\begin{example}
+    $\matrx{0&1\\1&0} \neq LR$, da \[
+    \matrx{l_{11} & 0 \\ l_{21} & l_{22}}\matrx{r_{11} & r_{12}\\ 0 & 
+    r_{22}} \implies (LR)_{11} = l_{11}r_{11} = a_{11} = 0 \implies 
+    l_{11} = 0 \midspace\lor\midspace r_{11} = 0 \text{\lightning}
+    \]
+    Bei Vertauschung der Zeilen funktioniert es aber \[
+    \matrx{1&0\\0&1} = \matrx{1&0\\0&1}\matrx{1&0\\0&1}
+    \]
+\end{example}
+Zu jeder regulären Matrix $A\in \R^{n\times n}$ mit $\det{A} \neq 0$ gibt 
+es eine Permutationsmatrix $P$ so, dass $PA$ eine LR-Zerlegung 
+besitzt.\\\\
+\underline{Berechnung der LR-Zerlegung:} Gauß Algorithmus
+
+Wir nehmen zunächst an, dass alle Operationen durchgeführt werden können, 
+dass alle auftretenden Diagonalelemente\(\neq 0\) sind.
+Erster Schritt:\[
+A^{(1)}=\begin{pmatrix}
+    a_{11} & \dots & a_{1n} \\
+    \vdots & \ & \vdots \\
+    a_{n1} & \dots & a_{nn}
+\end{pmatrix} \to  
+A^{(2)}\begin{pmatrix}
+    a_{11} & \dots & \dots  & a_{1n} \\
+    0 & \Tilde{a}_{22} & \dots &\Tilde{a}_{2n}\\
+    \vdots & \vdots & \ddots & \vdots \\
+    a_{n1} & \dots & \dots & a_{nn}
+\end{pmatrix}
+\]
+durch subtrahieren von Vielfachen der ersten Zeile von den anderen Zeilen.
+
+Diese Operation lässt sich auch als Matrix-Produkt darstellen:
+\(A^{(2)}=L_1A^{(1)}\) mit linker unterer Dreiecksmatrix \(L_1\)
+\[
+L_1=\begin{pmatrix}
+    1 & 0 & \cdots & 0 \\
+    -\frac{a_{21}}{a_{11}} & 1 & \ddots & \vdots \\
+    \vdots & \vdots & \ddots & 0 \\
+    -\frac{a_{n1}}{a_{11}} & 0 & \cdots & 1
+\end{pmatrix}
+\]
+Weiter entsprechend \[
+    A^{(i)} = \matrx{
+    * & * & *& *\\
+    0&\ddots & *&*\\
+    0& 0& *& * \\
+    0 & 0 & * & *
+    } \leadsto \matrx{
+    * & * & *\\
+    0 & \ddots & *\\
+    0 & 0 & *
+    }
+\]
+durch Matrix \[
+L_i = \matrx{1 & 0 & 0 & 0 & 0 & 0 & 0\\
+             0 & \ddots & 0& 0& 0 & 0& 0\\
+             0 & 0 & i & 0 & 0 & 0 & 0\\
+             0 & 0 & \frac{-\Tilde{a_{i+1, i}}}{a_{ii}} & \ddots & 0& 0 & 
+             0\\
+             0 & 0 & \vdots & 0 & 0 &\ddots& 0 \\
+             0 & 0 & -\frac{\Tilde{a}_{n, i}}{a_{ii}} & 0 & 0 & 0&\ddots}
+\]
+für $\igb i 2 {n-1}$: \[
+L_{n-1} \dots L_i L_{i-1} \dots L_1 A = R
+\]
+Man zeigt leicht: \[
+    L_{n-1} \dots L_1 = \matrx{1&0 &0 &0 \\
+    l_{21} & \ddots & 0& 0 \\
+    \vdots & \ddots & \ddots & 0\\
+    l_{2n} & \dots & l_{n,n-1} & 1 }
+\]
+und \[
+    (L_{n-1}\dots L_1)^{-1} = \matrx{1 & 0 & 0 &0\\
+    -l_{21} & \ddots & 0 & 0\\
+    \vdots & \ddots & \ddots & 0\\
+    -l_{n,1} & \dots & l_{n, n-1} & 1} \eqqcolon L
+\]
+Dementsprechend \[
+    (L_{n-1} \cdots L_1)^{-1} (L_{n-1}\cdots L_1) A = (L_{n-1}\cdots 
+    L_1)^{-1} R \implies A = LR
+\]
+
+Tritt beim Algorithmus ein Diagonalelement \(\Tilde{a}_{jj}=0\) auf, dann 
+muss durch Zeilentausch von Zahlen \(j\) und \(k\), \(k>j\), ein 
+Diagonalelement erzeugt werden, das \(\neq 0 \) ist. Falls \(\det A \neq 
+0\) , muss das immer möglich sein. \\
+Numerisch ist es aus Konditions- und Stabilitätsgründen vorteilhaft, wenn 
+alle \(\abs{l_{ij}}\leq 1\) sind für \(j<1\).\\
+Tausch der Zeilen \(j\) und \(k\) kann auch durch multiplikation mit 
+einer ''Permutationsmatrix'' \(P=P_{ik}\) beschrieben werden 
+\\\\
+\def\MatrixZeile{ \& \& \& \& \& \& \& \& \& \& \\ }    
+% "Spaltenzahl minus 1" \&-Zeichen setzen
+\def\MatrixZeilen{%         % "Zeilenzahl" Stück eintragen
+\MatrixZeile
+\MatrixZeile
+\MatrixZeile
+\MatrixZeile
+\MatrixZeile
+\MatrixZeile
+\MatrixZeile
+\MatrixZeile
+\MatrixZeile
+\MatrixZeile
+\MatrixZeile
+}%
+\begin{figure*}[h!]
+    \centering
+\(P_{jk}= \)\begin{tikzpicture}
+\matrix (m) [       % tikz-Matrix
+ampersand replacement=\&,
+matrix of math nodes, 
+nodes in empty cells,
+row sep = 0.2em,        
+column sep = 0.4em, 
+left delimiter  = (, right delimiter  = ), 
+]
+{%
+\MatrixZeilen
+};
+
+% Matrix füllen 
+\node[align=center] at (m-1-1) {1};
+\node[align=center] at (m-2-2) {\(\smallsetminus\)};
+\node[align=center] at (m-3-3) {1};
+\node[align=center] at (m-4-4) {0};
+\node[align=center] at (m-4-5) {.};
+\node[align=center] at (m-4-6) {.};
+\node[align=center] at (m-4-7) {.};
+\node[align=center] at (m-4-8) {1};
+\node[align=center] at (m-5-8) {.};
+\node[align=center] at (m-6-8) {.};
+\node[align=center] at (m-7-8) {.};
+\node[align=center] at (m-5-4) {.};
+\node[align=center] at (m-6-4) {.};
+\node[align=center] at (m-7-4) {.};
+\node[align=center] at (m-8-4) {1};
+\node[align=center] at (m-8-8) {0};
+\node[align=center] at (m-5-5) {1};
+\node[align=center] at (m-6-6) {\(\smallsetminus\)};
+\node[align=center] at (m-7-7) {1};
+\node[align=center] at (m-9-9) {1};
+\node[align=center] at (m-10-10) {\(\smallsetminus\)};
+\node[align=center] at (m-8-5) {.};
+\node[align=center] at (m-8-6) {.};
+\node[align=center] at (m-8-7) {.};
+\node[align=center] at (m-11-11) {1};
+\end{tikzpicture}
+    \captionsetup{labelformat=empty}
+    \caption{Matrixbeispiel siehe Tafelbild ''	Tafel\_20221212\_4.jpg'' 
+    unten 
+    rechts.
+}
+\end{figure*}
+
+Der Gauß-Algorithmus inklusive Zeilentausch lässt sich durch ein Matrix-
+Produkt darstellen \[
+    L_{n-1}P_{n-1}\cdots L_2 P_2 L_1 P_{1k_1}A  = R
+\]
+Man kann zeigen: \[
+    i < j : P_jL_i = \Tilde{L_i}P_j
+\]
+für unsere Matrizen $L_i$ von oben, wobei in $\Tilde{L_i}$ nur Einträge 
+$l_{j,i}, l_{k,i}$ vertauscht sind gegenüber $L_i$, also \[
+    L_{n-1} P_{n-1} \cdots L_1P_1A = \underbrace{\left(\widetilde{L_{n-
+    1}}\cdots \Tilde{L_1}\right)}_{(\ )^{-1} = L}\underbrace{\left(P_{n-
+    1}\cdots P_1\right)}_{P} A  = R \implies PA = LR
+\]
+Diese Matrizen $L_i$ heißen ''Frobenius-Matrizen''
+\begin{theorem}
+    Ist $A\in\R^{n\times n}$ mit $\det A \neq 0$, dann gibt es eine 
+    Permutationsmatrix $P$ so, dass $PA$ eine LR-Zerlegung besitzt.
+    \[
+    PA = LR = \frac{1}{2}L\cdot 2R
+    \]
+    ist die Diagonale von $L\matrx{L_{11}& 0 & 0\\
+                                   * & \ddots & 0\\
+                                   * & * & L_{nn}} = \matrx{1&0&0\\
+                                   *&\ddots & 0\\* & * & 1}$, 
+    dann die Zerlegung \underline{eindeutig}. (für die Permutationsmatrix 
+    $P$)
+\end{theorem}
+\begin{remark}
+    LR-Zerlegung kann auf dem Rechner sparsam gespeichert werden: \[
+    \matrx{r_{11} & \dots & \dots &r_{1n}\\P_{21} & \ddots & R & \vdots\\
+    \vdots & L & \ddots & \vdots\\
+    l_{n1} & & l_{n,n-1}&r_n}
+    \]
+\end{remark}
+\begin{remark}
+    Matlab/Octave: lu(...)
+\end{remark}
+% VL 14.12
+Für manche  Matrizen kann die LR-Zerlegung mit deutlich weniger 
+Rechenoperationen 
+ berechent werden:
+\subsection{LR-Zerlegung von Bandmatrizen}
+\begin{definition}
+    Eine Matrix $A\in \R^{n\times n}$, $A=(a_{ij})_{i,j}$ heißt 
+    \underline{''Bandmatrix''}
+    vom Bandtyp $(m_l,m_r)$, mit $0\leq m_l, m_r \leq n-1$, wenn gilt\[
+        a_{jk} = 0 \text{ für } k < j-m_l \text{ oder }k > j+m_r\]
+    $1+m_l+m_r$ heißt \underline{''Bandbreite''} der Matrix.
+\end{definition}
+\begin{example}\hfill
+    \begin{description}
+        \item[Typ ($\mathbf{0,0}$):] Diagonalmatrix,
+        \item[Typ ($\mathbf{1,1}$):] Tridiagonalmatrix
+        \item[Typ ($\mathbf{n-1,0}$):] linke untere Dreiecksmatrix,
+        \item[Typ ($\mathbf{0,n-1}$):] rechte obere Dreiecksmatrix    
+    \end{description}
+\end{example}
+
+!D Randwertproblem für gewöhnliche DGL 2. Ordnung 
+\begin{align*}
+    -u''(x)&= f(x)\qquad x\in(0,1)\\
+    u(0)&= u_0\\
+    u(1) &= u_1
+\end{align*}
+
+\textbf{Bild}
+\begin{align*}
+    -u''(x)&\approx \frac{-u(x-h)+2u(x)-u(x+h)}{h^2}\\
+    &\approx \frac{-u_{i-1}+2u_i-u_{i+1}}{h^2}
+\end{align*}
+\(\Rightarrow \)\underline{Tridiagonalmatrix}
+\begin{align*}
+    \frac{1}{h^2}\begin{pmatrix}
+        2 & -1 & \ & 0 \\
+        -1 & \smallsetminus & \smallsetminus & \ \\
+        \ & \smallsetminus & \smallsetminus & -1 \\
+        0 & \ & -1 & 2
+    \end{pmatrix}\begin{pmatrix}
+        u_1 \\
+        \vdots \\
+        u_n
+    \end{pmatrix}=\begin{pmatrix}
+        f_1+u_0 \\
+        f_2 \\
+        \vdots \\
+        f_{n-1} \\
+        f_n+u_1
+    \end{pmatrix}   
+\end{align*}
+
+2D Randproblem für partielle DGL 2. Ordnung:
+\[
+-\Delta u(x_i,y_i)\approx\frac{1}{h^2}\begin{bmatrix}
+    \ & -1 & \ \\
+    -1 & 4 & -1 \\
+    \ & -1 & \ 
+\end{bmatrix}u
+\]
+\begin{align*}
+    -\Delta u(x)&=f(x) \text{ in } \Omega = (0,1)^2\\
+    u(x)&= g(x)\text{ auf }(\text{da ist ein komisches gespiegeltes 
+    C})\Omega
+\end{align*}
+
+
+
+\begin{theorem}
+    Sei $A\in \R^{n\times n}$ Bandmatrix vom Typ $(m_l, m_r)$, die eine 
+    LR-Zerlegung (ohne Zeilentausch) erlaubt, dann sind die Faktoren 
+    $L,R$ ebenfalls Bandmatrizen vom Typ $(m_l, 0)$ bzw $(0,m_r)$. Der 
+    Aufwand für die Berechnung der LR-Zerlegung ist dann \[
+    \frac{1}{3}n\cdot m_l \cdot m_r + \calO{n\cdot(m_l + m_r)}
+    \]
+\end{theorem}
+\begin{proof}
+    Nachrechnen \LOL{3.141592653589793238462}
+\end{proof}
+\begin{example}
+    Tridiagonalmatrix $(1,1)$: $\calO{n}$ Operationen $\leadsto$ lösen 
+    eines LGS mit Tridiagonalmatrix
+\end{example}
+\subsection{Cholesky-Zerlegung}
+Spezialfall für symmetrische positiv definite Matrizen.
+\begin{theorem}
+    Sei $A\in \Rnm{n}{}$ eine Symmetrische und positiv definite Matrix.
+    Dann besitzt \(A\) eine LR-Zerlegung (ohne Zeilentausch) mit 
+    \underline{positiven} \(\Tilde{a}_{ii}, \ i=1,\dots,n\).
+\end{theorem}
+\begin{proof}
+    In ersten Schritt der LR-Zerlegung: \(a_{11}>0\), da \(A\) positiv 
+    definit ist, dann \(e_1^T A e_1=a_{11}>0, \ e_1=\begin{pmatrix}
+        1\\ 0\\ \vdots \\ 0
+    \end{pmatrix}\)
+    Elimination der ersten Spalte: \[\Tilde{a}_{JK}=a_{JK}-\frac{a_{j1}}
+    {a_{11}}\cdot a_{1K}= a_{KJ}-\frac{a_{k1}}{a_{11}}\cdot 
+    a_{1J}=\Tilde{a}_{KJ}\Rightarrow \Tilde{A} \text{ist Symmetrisch}
+    \]
+    Ist \(\Tilde{A}\) positiv definit?\\
+    Sei \[
+    \Tilde{x}=(\Tilde{x}_2,\dots,\Tilde{x}_n)^T\in\R^{n-1}
+    \]
+    beliebig. Setze \[
+    x_1\coloneqq\frac{-1}{a_{11}}\cdot\sum_{K=2}^n a_{1K}x_K
+    .\]
+    Dann ist \(x_1,\dots,x_n)^T\in\R^n\).\\
+    Dann ist (\(A\) pos. def.). 
+    \begin{align*}
+    &0<\underset{x^TAx}{\underbrace{\sum_{J,K=1}^na_{JK}x_Jx_K}}\\
+    &=\sum_{J,K=1}^na_{JK}x_Jx_K+a_{11}x_1^2+2a_{11}\sum_{K=2}^n a_{1K} 
+    x_K + \underset{=0}{\underbrace{\frac{1}{a_{11}} \left(\sum_{K=2}^n 
+    a_{1K} x_K\right)^2-\frac{1}{a_{11}}\left(\sum_{J,K=1}^n 
+    a_{1J}a_{1K}x_Jx_K\right)}}\\
+    &= \sum_{j,k=2}^n \left(a_{jk} - \frac{a_{k1}}{a_{11}}\cdot 
+    a_{ij}\right)x_jx_k + a_{11}\underset{=0, \text{ Wahl von 
+    }x_1}{\underbrace{\left(x_1 + \frac{1}{a_{11} \sum_{k=2}^n a_{1k} 
+    x_k}\right)^2}}\\
+    &= \Tilde{x}^T \Tilde{A}\Tilde{x}
+    \end{align*}
+    Also ist $\Tilde{A}$ positiv definit.
+\end{proof}
+\begin{theorem}
+    Symmetrische positiv definite Matrizen $A\in \Rnm{n}{}$ gestatten eine
+    ''Cholesky-Zerlegung'' \[
+        A=LDL^T = \Tilde{L}\Tilde{L}^T
+    \]
+    mit positiver Diagonalmatrix \[
+        D = \matrx{d_{11}& 0 & 0 \\
+        0 & \ddots & 0 \\
+        0 & \dots  & d_{nn}},\midspace  d_{ii} > 0
+    \]
+    bzw (unskalierter) linker unterer Dreiecksmatrix \[
+        \Tilde{L} = LD^{\frac{1}{2}}, \largespace D^{\frac{1}{2}}=\matrx{
+        \sqrt{d_{11}} & 0 & 0\\
+        0 & \ddots & 0 \\
+        0 & \dots & \sqrt{d_{nn}}
+        }
+    \]
+\end{theorem}
+\begin{proof}
+    \(A = LR\) mit \(L = \matrx{1& 0 & 0\\
+    * & \ddots & 0\\
+    * & * & 1}\) ''skaliert'', \(R = \matrx{r_{11} & * & * \\
+    0 & \ddots & *\\ 0 & 0 & r_{nn}}\), $r_{ii} > 0$. Dann ist 
+    $R=D\Tilde{R}$ mit \[
+        D = \matrx{r_{11} & 0 & 0\\
+                    0 & \ddots & 0 \\
+                    0 & 0 & r_{nn}}, \largespace \Tilde{R} = \matrx{1 & 
+                    &\dfrac{r_{ij}}{r_{ii}}\\0&\ddots & \\0 & 0 & 1}
+    \]
+    Also ist \[
+    A = A^T = (LR)^T = (LD\Tilde{R})^T = \Tilde{R}DL^T
+    \]
+    mit linker unterer Dreiecksmatrix $\Tilde{R}^T$, sklaiert, und rechter
+    oberer Dreiecksmatrix $DL^T$. Also \[
+        \Tilde{R}^T = L, \largespace DL^T = R
+    \]
+\end{proof}
+
+    \(\Rightarrow\) R muss gar nicht explizit berechnet werden, es genügt 
+    L und D zu kennen.\\
+    \(\Rightarrow\) Rechenoperationen etwa nur halb so viele nötig, 
+    Speicherplatz ähnlich.
+\subsection{''Lösung'' nicht regulärer Systeme}
+Jetzt muss die Matrix nicht quadratisch sein.
+\[
+A\in \R^{m\times n},\ b\in\R^m
+\]
+gegeben \(\Rightarrow\) lineares Gleichungssystem 
+\[
+Ax=b \text{ für } x\in\R^n
+\]
+\underline{Lineare Algebra:} Ist \(\rang A= \rang{A\vert b}\) dann ist das 
+lineare Geichungssystem lösbar (\(b\in\)Span der Spalten von \(A\)), aber 
+im Allgemeinen nicht eindeutig lösbar.\\
+Ist \(\rang A<\rang{A\vert b}\), dann ist das lineare Gleichungssystem 
+nicht klassisch lösbar.
+Man kann aber versuchen, den ''Defekt'' $d\coloneqq Ax-b$ zu minimieren, 
+z.B. bezüglich der euklidischen Norm mit der ''\underline{Methode der 
+kleinsten Fehlerquadrate}'' \[
+    \dabs{d}_2 \coloneqq \sqrt{\sum_{i=1}^n d_i^2}
+\]
+\begin{theorem}[''\underline{Least-squares-Lösung}'']
+    $A\in \Rnm n m$, $b \in \Rn n$ gegeben. Dann existiert immer eine 
+    Lösung $\overline{x}\in \Rn n$ mit kleinstem Fehlerquadrat \[
+        \dabs{A\overline{x} -b}_2 = \min_{x\in\R^n}\dabs{Ax-b}_2
+    \] 
+    Dies ist äquivalent dazu, dass $\overline{x}\in \R^n$ eine Lösung der 
+    ''\underline{Normalgleichung}'' \[
+        A^T A x = A^T b
+    \] ist. Ist $\rang{A} = n$, dann ist $\overline{x}$ eindeutig 
+    bestimmt, ansonsten ist mit $\overline{x}$ auch für jedes $y\in 
+    \Kern{A}$ $\overline{x}+y$ eine Lösung, und dies beschreibt alle 
+    Lösungen. 
+\end{theorem}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+               %Vorlesung 19.12.
+{
+\def\tx{\ensuremath{\tilde{x}}}
+\begin{theorem}[Least-Squares Lösungen]
+    Sei $A\in \Rnm{m}{n}, b\in R^m$. Dann existiert immer ein $\tilde{x}\in R^n$ mit \[
+        \dabs{A\tx - b}^2 = \min_{x\in\R^n}\dabs{Ax-b}^2\]
+    und $\tx$ ist Lösung der Normalgleichung\[
+        A^TA\tx = A^T b\]
+    $\tx$ ist eindeutig, wenn $\rang{A} = n$
+\end{theorem}
+\begin{proof}
+    Sei $\tx$ Lösung von $A^TA\tx = A^T b$. Wir wissen aus \begin{description}
+        \item[Analysis:] Minimum einer stetigen Funktion, \[\min_i \abs{x_i} \to \infty
+        \implies \underbrace{\dabs{Ax - b}^2_2}_{\coloneqq F(x)} \to \infty \largespace \text{Außer $A = 0$}\]
+        also \[
+            \forall M > 0 \exists r_0: F(x) \geq M\forall x: \min\abs{x_i} \geq r_0\]
+        dementsprechend nimmt $F(x)$ auf der kompletten Menge $B_{r_0}(0)$ ihr Minimum an. 
+        \item[Lineare Algebra:] Es gelten die orthogonalen Zerlegungen:\[
+            R^m = \Im(A) + \Kern{A^T}\]
+            \[
+            R^n = \Im(A^T) + \Kern{A}\]
+            Damit gibt es zu $b\in \R^m$ genau ein $s\in \Im(A)$ und genau ein $r\in \Kern{A^T}$, sodass $b=s+r$.
+            Sei dann $\tx \in \R^n$ mit $A\tx = s$ Dann ist \[
+                A^T A\tx = A^T s = A^T(s+r) = A^T b\]
+            also ist $\tx$ eine Lösung der Normalgleichung
+    \end{description}
+\end{proof}
+Ist $A^TA\in \Rnm{}{}$ regulär, dann auch positiv definit und symmetrisch. Dann 
+können wir die Normalgleichungen mit Hilfe der Cholesky-Zerlegung von $A^T A$ lösen.
+\[
+    \min_x \dabs{Ax-b}^2_2 \iff A^TA\tx = A^T b, \ A^T A  = \tilde{L}\tilde{L}^T \leadsto 
+    \tilde{L} \tilde{L}^T\tx = A^T b\] 
+}
+Eine besser konditionierte Lösungsmethode:\begin{remark}[QR Zerlegung von $A$ bzw $A^T A$]
+    Dabei ist $Q$ eine \underline{orthogonale Matrix}, also bilden Zeilen bzw. Spalten eine
+    Orthonormalbasis, $R$ rechte obere Dreiecksmatrix. Dementsprechend ist \[
+        \dabs{Qx}_2 = \dabs{x}_2 \forall x\in R^n\]
+    Für $A\in\Rnm{m}{n}, \ m > n$ gilt \[
+        QA = \matrx{R\\\underbrace{0}_{m-n}}\]
+    Um nun \[QAx = Qb \iff \matrx{R\\0} x = \matrx{b_1\\b_2} \]
+    zu lösen, reicht es \[
+        Rx=b_1\]
+    zu lösen, mit $R\in \Rnm{}{}, \ x,b_1\in \R^n$
+    Dann ist \[
+        \dabs{Ax-b}_2^2 = \dabs{Q(Ax-b)}^2_2 = \dabs{Rx_1-b_1}_2^2 + \dabs{b_2}_2^2\]
+    und es wird minimiert, wenn \[
+        Rx_1 = b_1\]
+\end{remark}
+\underline{Ausgleichsrechnung}
+Bei der Interpolation wollten wir eine genaue Beschreibung von gegebenen Daten durch
+Funktion (Polynom, Spline,...) von evtl hohen Polynomgrad. Jetzt suchen wir eine möglichst
+gute \underline{Approximation} der Daten mit einfachen Funktionen (kleiner Grad z.B.).
+Zu gegebenen Funktionen $u_1,\dots, u_n$ und Daten $(x_1,y_1),\dots,(x_m,y_m)$ mit $m>n$
+ist eine Linearkombination \[
+    u(x) = \sum_{j=1}^m c_j \cdot u_j(x) \]
+gesucht, sodass \[
+    \sum_{j=1}^m (u(x_i)- y_i)^2\]
+minimal ist. Das lässt sich als Gleichungssystem bzw. Normalgleichung schreiben
+\[
+    A= (a_{ij}), \ a_{ij} = u_j(x_i), \ \underbrace{\matrx{
+        u_1(x_1)&\dots & u_n(x_1)\\
+        \vdots & \vdots & \vdots \\
+        u_1(x_m) & \dots & u_n(x_m) 
+    }}_{A} \underbrace{\matrx{c_1\\\vdots\\c_n}}_{x} = \underbrace{\matrx{y_1\\\vdots\\y_n}}_b, \ \min_x\dabs{Ax - b}^2_2\]
+Die optimalen Koeffizienten $c_i$ lösen gerade die Normalgleichungen $A^TA\tilde{x} = A^T b$
+\begin{example}
+    Polynome $p\in \Pol{n-1}$, Basisfunktionen sind die Monome $1, x, x^2, x^{n-1}$. Es ist \[
+        \underbrace{\matrx{1 & x_1 & x_1^2 &\dots & x_1^{n-1} \\\vdots & \vdots & \vdots & \vdots& \vdots\\
+        1 & x_m & x_m^2 & \dots & x_m^{n-1}}}_A \matrx{c_1\\\vdots\\c_n} = \matrx{y_1\\\vdots y_n}\]
+    löse \[\underbrace{A^TA}_{\in \Rnm{}{}} \tilde{x} = A^T b\]
+    Für höhere Polynomgrade ist die Vandermonde Matrix immer schlechter konditioniert, deshalb
+    besser QR-Zerlegung benutzen.
+\end{example}
+\subsection{Kondition und Stabilität von linearen Gleichungssystemen}
+Wir betrachten die Mathematische Aufgabe $(A,b) \mapsto x$, die Lösung von $Ax=b$.
+Diese ist schlecht konditioniert, wenn kleine Störungen in den Daten relativ große Fehler versuchachen.
+\begin{question}
+    Wie misst man die Störungen in den Daten?
+\end{question}
+Wir betrachten die Vektor- und Matrixnormen \[
+    \dabs{A+\delta A}, \ \dabs{b+\delta b}\]
+\begin{description}
+    \item[Vektornormen]\hfill\begin{itemize}
+        \item $\dabs{x}_1 \coloneqq \dsum_{i=1}^n \abs{x_i}$
+        \item $\dabs{x}_2 \coloneqq \left(\dsum_{i=1}^n \abs{x_i}^2\right)^{\frac{1}{2}}$
+        \item $\dabs{x}_\infty \coloneqq \max_{\igb i 1 n}\abs{x_i}$
+    \end{itemize} 
+    \item[\underline{induzierte} Matrixnormen]\hfill\begin{itemize}
+        \item $\dabs{A}_1 \coloneqq \max_{\igb j 1 n}\dsum_{i=1}^n \abs{a_{ij}}$ max. Spaltensumme
+        \item $\dabs{A}_2 \coloneqq \sqrt{\zeta(A^T A)} = \max\set{\sqrt{\lambda}: \lambda \text{Eigenwert von }A^TA}$.
+        Ist $A$ symmetrisch, dann ist $\dabs{A}_2 = \zeta(A)$
+        \item $\dabs{A}_\infty \coloneqq \max_{\igb j 1 n}\dsum_{i=1}^n\abs{a_{ji}}$ max. Zeilensumme
+    \end{itemize}
+\end{description}
+\begin{definition}
+    Die Konditionszahl einer regulären Matrix $A$ in einer Matrixnorm ist \[
+        \dabs{A}\dabs{A^{-1}} \eqqcolon \kappa(A)\]
+    Ist $A$ nicht invertierbar, dann $\kappa(A) \coloneqq \infty$
+\end{definition}
+\begin{remark}
+    Bezüglich der $2$-Norm \[
+        \kappa(A) = \dabs{A}_2\dabs{\inv{A}}_2 = \frac{\lambda_{\max}}{\lambda_{\min}}\]
+        wobei $\lambda_{\max}, \lambda_{\min}$ die betragsmäßig größten/kleinsten Eigenwerte
+        von $A$ sind, falls $A$ symmetrisch ist.
+\end{remark}
+\begin{example}
+    \[
+        \frac{1}{h^2}\matrx{
+            2&-1&0\\-1&\ddots & \dots\\
+            \ddots& \ddots&\ddots
+        }\]
+    aus Diskretisierung von $-n''(x) = f(x)$ hat Eigenwerte $h^2\cdot k^2\pi^2, \ \igb k 1 n$
+    also \[
+        \lambda_{\min} = h^2\pi^2, \ \lambda_{\max} = h^2n^2\pi^2\] 
+    Dementsprechend \[
+        \kappa(A) = \calO{n^2} 0 \calO{\frac{1}{h^2}}\]
+\end{example}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\[
+    Ax =  b \implies (A+\delta A) (x+\delta x) = (b+\delta b) \]
+zur Lösbarkeit des gestörten Systems
+\begin{lemma}
+    Eine Matrix $B\in\Rnm{}{}$ habe Norm $\dabs{B} < 1$. Dann ist 
+    $I+B$ regulär und es gilt \[
+        \dabs{(I+B)^{-1}} \leq \frac{1}{1-\dabs{B}}\] 
+\end{lemma}
+\begin{proof}
+    \[
+        \forall x \in \R^n: x=I x = (I + B) x - Bx\]
+    also \[
+        \dabs{x} \leq \dabs{(I + B) x} + \dabs{Bx}\]
+    und \[
+        \forall x \neq 0: \dabs{(I+B) x} \geq \dabs{x} - \dabs{Bx} \geq \dabs{x} - \dabs{B}\cdot \dabs{x} = (\underbrace{1-\dabs{B}}_{>0})\dabs{x} > 0\]
+    Also ist $\Kern{I + B} = \set{0},$ $I+B$ regulär. Weiter ist
+    \begin{align*}1&=\dabs{I} = \dabs{(I+B)(I+B)^{-1}} \\&= \dabs{(I+B)^{-1} + B(I+B)^{-1}}\\
+         &\geq \dabs{(I+B)^{-1}} - \dabs{B}\dabs{(I+B)}^{-1} \\&= (1-\dabs{B})\dabs{(I+B)^{-1}}
+    \end{align*}
+\end{proof}
+
+Damit können wir zeigen
+\begin{theorem}[Störungssatz]
+    \(A\in\R^{n\times n}\) regulär und \(\delta A \in\R^{n\times n}\) mit \[\abs{\abs{\delta A }}\leq \frac{1}{\abs{\abs{A^{-1}}}}\]   
+    Damit ist die Matrix \(A+\delta A\) ebenfalls regulär und für den relativen Fehler der Lösung \(\delta x\) gilt:
+    \[
+    \frac{\abs{\abs{\delta x}}}{\abs{\abs{x}}} \leq \frac{\kappa (A)}{1-\kappa (A)\frac{\abs{\abs{\delta A}}}{\abs{\abs{A}}}} 
+    \left(\frac{\dabs{\delta b}}{\dabs{b}}+\frac{\dabs{\delta A}}{\dabs{A}}\right)
+    \]
+\end{theorem}
+
+\begin{proof}
+    \[\dabs{A^{-1}\cdot \delta A}\leq\dabs{A^{-1}}\dabs{\delta A}\leq 1\] Damit ist \[A+\delta A = A(I+A^{-1}\delta A) \] regulär nach dem Lemma vorher.
+    Für die Lösung \(x+\delta x\) gilt \[
+    (A+\delta A)(x+\delta x)=b+\delta b \Leftrightarrow (A+\delta A)\delta x = b+\delta b- (A+\delta A)x= \delta b-\delta Ax
+    \]
+    %%
+    Also \begin{align*}
+        \dabs{\delta x}&\leq \dabs{(A+\delta A)^{-1}} \left(\dabs{\delta b} + \dabs{\delta A}\dabs{x}\right)\\
+        &= \dabs{(A(I+A^{-1}\delta A))^{-1}} \\
+        &= \dabs{(I+A^{-1}\delta A)^{-1}A^{-1}}\\
+        &\leq \dabs{(I+A^{-1} \delta A)^{-1}} \cdot \dabs{A^{-1}}(\dabs{\delta b} + \dabs{\delta A}\dabs{x})\\
+        &\leq \frac{1}{1-\dabs{A^{-1}\delta A}}\dabs{A^{-1}}(\dabs{\delta b} + \dabs{\delta A}\dabs{x})\\
+        &\leq \frac{1}{1-\dabs{A^{-1}} \dabs{\delta A} \frac{\dabs{A}}{\dabs{A}}}\cdot \frac{\dabs{A} \dabs{A^{-1}}}{\dabs{A}}\dabs{x}\left(\frac{\dabs{\delta b}}{\dabs{x}} + \dabs{\delta A}\right)\\
+        &\leq \frac{1}{1-\kappa(A)\cdot \frac{\dabs{\delta A}}{A}}\cdot \kappa(A) \cdot \left(\frac{\dabs{\delta b}}{\dabs{b}} + \frac{\dabs{\delta A}}{\dabs{A}}\right)\cdot \dabs{x}
+    \end{align*}
+\end{proof}
+\begin{remark}
+    Ist $\kappa(A) \frac{\dabs{\delta A}}{\dabs{A}}\leq 1$, dann gilt im Wesentlichen
+    \[
+        \frac{\dabs{\delta x}}{\dabs{x}} \leq \kappa(A)\cdot \left(\frac{\dabs{\delta b}}{\dabs{b}} + \frac{\dabs{\delta A}}{\dabs{A}}\right)\]
+    das heißt Fehler in den Daten werden im Wesentlichen durch die \underline{Kondition
+    der Matrix} verstärkt. Dies kann groß sein:\[
+        \text{Kond}\left[\matrx{2&-1&0\\-1&\ddots & \ddots \\
+        0&\ddots & \ddots }\right] = \calO{\frac{1}{h^2}} = \calO{n^2}\]
+\end{remark}
+
+Was gilt zusätzlich für die Stabilität der Gauß-Elimination?
+\begin{theorem}[Rundungsfehlereinfluss]
+
+    \(A\in \R^{n\times n}\) regulär, das Gleichungssystem \(Ax=b\) werde durch
+    Gauß-Elimination mit Spaltenpriorisierung gelöst.\\
+    Dann ist die unter Einfluss von Rundungsfehlernberechnete Lösung \(x+\delta x\)
+    die exakte Lösung eines gelösten Problems \((A-\delta A)(x+\delta x)=b\)
+    mit \[\frac{\dabs{\delta A}_\infty}{\dabs{A}_\infty}\leq 1.01\cdot 2^{n-1}\cdot
+    \left(n^3+2n^2\right)\cdot \text{eps}\underset{=\text{Maschinengenauigkeit}}{\ }\]
+    (Ohne Beweis)
+\end{theorem}
+Mit obigem Satz folgt:\\
+\[\frac{\dabs{\delta x}_\infty}{\dabs{x}_\infty}\leq \frac{\kappa(A)}
+{1-\kappa(A)\frac{\dabs{\delta A}}{\dabs{A}}}\]
+
+
+
+
+Der Faktor \(2^{n-1}\) ist eine  obere Abschätzung für allgemeine reguläre Matrizen, hat etwas mit dem größten auftretenden Pivot-Element zu tun.\\
+Es gibt allerdings Matrizen, die diesen Faktor realisieren: \\
+Bsp.: Wilkinson 
+\(\matrx{1 & & 0 & & 1\\-1 & \ddots & & & \vdots\\ \vdots & \ddots & \ddots & & 
+\vdots\\\vdots  & & \ddots & \ddots & \vdots\\ -1 & \cdots & \cdots & -1 & 1\\}\)\\
+(Wikipedia zeigt eine andere Matrix als Schmidt)
+\\
+Für spezielle Matrizen ist der Faktor deutich kleiner:
+ \begin{itemize}
+     \item[n] bei der oberen Hessenbergmatrix
+     \item[2] Matrix strikt diagonaldominant
+     \item[2] Matrix tridiagonal
+     \item[1] Matrix Symmetrisch positiv definit
+     \item[\(n^\frac{2}{3}\)] Erwartungswert für statistische Matrix
+ \end{itemize}
+
+ Rundungsfehler Einfluss dann mit der LR-Zerlegung also stark verstärkt werden. \[
+ A\to L_1 A \to L_2L_1A\to \cdots \to L_{n-1}\cdots L_1A=R
+ \]
+und jedes \(L_i\) kann die Rundungsfehler verstärken. bessere Stabilität ist zu erwarten, wenn man beschränkte Transformationen nutzt, z.B. ortogonale.\\
+\(\leadsto\) QR-Zerlegung, Transformation mit orthogonalen Matrizen: 
+\(A=QR\).\\ Orthogonale Matrix, R rechte obere Dreiecksmatrix.\\
+Orthogonal: \(\dabs{Qx}=\dabs{x}\), \(Q^{-1}=Q^T\) ebenfalls orthogonal: Verfahren generiert \(Q^TA=R\) 
+\begin{itemize}
+    \item[\(Q^T\)] ist wieder Produkt einfacher orthogonaler Matrizen: \(Q^T=Q_{n-1}\cdots Q_1\)
+    \item[\(Q_1\)] bringt erste Spalte von \(Q_1A\) auf \(\matrx{\ast \\ 0 \\ \vdots \\ 0}\) Gestalt, etc.
+\end{itemize}
+
+\begin{example}[2D]
+    \(\matrx{a_1\\a_2}\to \matrx{\alpha\\0\\}\) durch orthogonale Transformation\\
+    (Bild)\\
+    geht zwar mit einfachen geometrischen Operationen:\\
+    \begin{itemize}
+        \item Drehung um (0,0) um Winkel-\(\beta\)\\
+            Multiplikation mit Matrix \(\matrx{c & s\\-s & c\\},\ c^2+s^2=1,\ 
+            c=\cos{(-\beta),\ s=\sin{(-\beta)}}\)
+        \item Spiegelung an Ebene/Gerade:\\
+            Matrix \(I-2\frac{vv^T}{v^Tv}\) Spiegelung an Ebene \(\bot\)\checked
+    \end{itemize}
+    Beide Ideen werden in numerischen Verfahren genutzt:
+    \begin{itemize}
+        \item \underline{QR-Zerlegung mittels "girens-Rotationen":}\\
+        nutze Rotationsmatritzen um nacheinander-
+        \[A=\matrx{a_{11} & \cdots & \cdots & \cdots\\
+        \vdots & & & \\ \vdots & & & \\a_{n-1,1} & \cdots & \cdots & \cdots\\
+        a_{n,1} & \cdots & \cdots & \cdots}\to \text{Q}_{n,n}A=
+        \matrx{a_{11} & \cdots & \cdots & \cdots\\
+        \vdots & & & \\ a_{n-1,1} & & & \\ \alpha & * & \cdots & *\\
+        0 & * & \cdots & *};\]
+        \[\text{Q}_{n1}=\matrx{1 \\& \ddots &\\&& 1\\ &&c & s\\&&-s & c\\};
+        \text{Q}_{n2}\text{Q}{nn}A=\matrx{*\\\vdots\\ * & *&&\\0\\0\\}\cdots\]
+        Eine \(2\times 2\)-Rotation für jedes Matrixelement unterhalb der Diagonalen.
+
+        \item[Aufwand:] etwa 4-mal so groß wie bei der LR-Zerlegung aber stabiler und auch anwendbar bei überbestimmten Gleichungssystemen, (statt Normalgleichungen) \(QA=\matrx{R \\ 0} = Qb\)
+        
+        \item\underline{QR-Zerlegung mittels ''Householder-Reflesionen''} 1. Spiegelung die \(\matrx{a_{11} \\ \vdots \\ a_{n1}}\) auf 
+        \(\matrx{\alpha \\ 0 \\ \vdots \\ 0}\) spiegelt mit  \(Q_1=I-2\frac{vv^T}{v^Tv}\), \(v\) relativer Fehler einfach Berechenbar. Spiegelungsmatrizen \(Q_i\) symmetrische orthogonale Matrizen.
+        \item[Aufwand:] insgesamt etwa doppelt so groß wie bei der LR-Zerlegung, aber stabil und auchReflesionen anwendbar bei überbestimmten Gleichungssystemen.
+    \end{itemize}
+\end{example}
+    
+\end{document}

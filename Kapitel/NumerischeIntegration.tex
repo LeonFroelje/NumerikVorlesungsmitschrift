@@ -1,6 +1,7 @@
-\documentclass{../Skript}
-
+\documentclass[../Skript.tex]{subfiles}
+\graphicspath{{\subfix{../images/}}}
 \begin{document}
+
 \section{Numerische Integration}
 Berechnung von Integralen, z.B. zur Flächen- oder Volumenberechnung, 
 aber auch 
@@ -261,170 +262,241 @@ Quadraturformel nach oben begrenzt ist
         \int_a^b p(x)\diff x > 0 \lightning
     \]    
 \end{proof}
-Man kann bei geschickter Wahl der Stützstellen also alle Polynome $p\in\bbP_{2n+1}$ exakt integrieren.
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Man kann bei geschickter Wahl der Stützstellen also alle Polynome 
+$p\in\bbP_{2n+1}$ exakt integrieren.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%
 Ein Polynom $p\in\bbP_{2n+1}$ kann man immer zerlegen in \[
     p(x) = r(x) \cdot q(x) + s(x)\]
 mit $q\in \bbP_{n+1}$ fest vorgegeben, $\deg{q} = n+1$, $r,s\in \bbP_n$.
 Z.B. für $q(x) =x^{n+1}$: \[
-    p(x) = \dsum_{i=0}^{2n+1}a_ix^i \implies r(x) = \sum_{i=0}^n a_{i+n+1}x^i, \largespace s(x) = \sum_{i=0}^na_i^i\]
+    p(x) = \dsum_{i=0}^{2n+1}a_ix^i \implies r(x) = \sum_{i=0}^n 
+    a_{i+n+1}x^i, \largespace s(x) = \sum_{i=0}^na_i^i\]
 für eine Wahl $a \leq x_0 < x_1 < \dots < x_n \leq b$ wählen wir \[
     q(x) \coloneqq \prod_{i=0}^n(x-x_i) \in \bbP_{n+1}\]
 \begin{question}Quadraturformel für $p$?
 \end{question}
 Es ist \begin{align*}
-    \int_a^b p(x) \diff x &= \underset{I^{(n)}(r\cdot q) + \text{ Rest}}{\underbrace{\int_a^b r(x) q(x) \diff x}} + \underset{I^{(n)(s)}}{\underbrace{\int_a^b s(x)\diff x}}
+    \int_a^b p(x) \diff x &= \underset{I^{(n)}(r\cdot q) + \text{ Rest}}
+    {\underbrace{\int_a^b r(x) q(x) \diff x}} + \underset{I^{(n)
+    (s)}}{\underbrace{\int_a^b s(x)\diff x}}
 \end{align*}
 Falls also \[
     \int_a^b p(x) \diff x \overset{!}{=}I^{(n)}(p)\]
 sein soll für alle $p\in\bbP_{2n+1}$, dann muss \[
     \int_a^b r(x) q(x) \diff x = 0 \text{ für alle $r\in \bbP_n$}\]
 \begin{question}
-    gibt es ein $q\in \bbP_{n+1}$, bzw \[x_0 < \dots < x_n \in [a,b], \midspace q(x) = \prod_{i=0}^n(x-x_i)\]
+    gibt es ein $q\in \bbP_{n+1}$, bzw \[x_0 < \dots < x_n \in [a,b], 
+    \midspace q(x) = \prod_{i=0}^n(x-x_i)\]
     so, dass \[
         \int_a^b r(x)q(x)\diff x = 0\]
     für alle $r\in \bbP_n$?
 \end{question}
-Wir betrachten den Raum $\bbP_{n+1}$ mit Basis $\set{1,x,x^2,\dots,x^{n+1}}$ mit
+Wir betrachten den Raum $\bbP_{n+1}$ mit Basis $\set{1,x,x^2,
+\dots,x^{n+1}}$ mit
 \underline{Skalarprodukt} \[
-    (r,q)\coloneqq \int_a^b r(x)q(x)\diff x\midspace \text{für alle }r,q\in\bbP_{n+1}\]
-\underline{Gram-Schmidt-Orthogonalisierungsverfahren}:\[p_0(x) \coloneqq 1, \largespace
-p_n(x) \coloneqq x^k - \dsum_{j=0}^{k-1}\frac{\left(x^k, p_j\right)}{\left(p_j,p_j\right)}p_j, \largespace \igb k 1 {n+1}\]
-%Die Klammern, damit außerhalb von diesem Block der alte Skalarprodukt Makro bleibt
+    (r,q)\coloneqq \int_a^b r(x)q(x)\diff x\midspace \text{für alle 
+    }r,q\in\bbP_{n+1}\]
+\underline{Gram-Schmidt-Orthogonalisierungsverfahren}:\[p_0(x) \coloneqq 
+1, \largespace
+p_n(x) \coloneqq x^k - \dsum_{j=0}^{k-1}\frac{\left(x^k, p_j\right)}
+{\left(p_j,p_j\right)}p_j, \largespace \igb k 1 {n+1}\]
+%Die Klammern, damit außerhalb von diesem Block der alte Skalarprodukt 
+%Makro bleibt
 {
 \def\scp#1#2{\ensuremath{\left(#1,\ #2\right)}}
-Also steht $p_{n+1}$ senkrecht auf $\lin{p_0, \dots, p_n} = \bbP_n$, d.h. \[
+Also steht $p_{n+1}$ senkrecht auf $\lin{p_0, \dots, p_n} = \bbP_n$, d.h. 
+\[
     \scp r {p_{n+1}} = 0 \largespace\forall r \in \bbP_n
     \]
-    dementsprechend ist $p_{n+1}$ Kandidat für unser Polynom $q$, $q = p_{n+1}$, da
-    die führende Potenz $1\cdot x^{n+1}$ die gleiche ist. Mann kann zeigen, dass alle
-    $p_k$ jeweils $k$ verschiedene, einzelne Nullstellen hat, damit $q=\bbP_{n+1}$ gerade
+    dementsprechend ist $p_{n+1}$ Kandidat für unser Polynom $q$, $q = 
+    p_{n+1}$, da
+    die führende Potenz $1\cdot x^{n+1}$ die gleiche ist. Mann kann 
+    zeigen, dass alle
+    $p_k$ jeweils $k$ verschiedene, einzelne Nullstellen hat, damit 
+    $q=\bbP_{n+1}$ gerade
     Nullstellen $x_i$, $a\leq x_0 < \dots < x_n \leq b$ hat, und damit \[
         q(x) = \prod_{i=0}^n(x-x_i)\]
 \begin{theorem}[''Gauß-Quadratur'']\hfill\\
-    Es gibt genau eine interpolatorische Quadraturformel zu $n+1$ paarweise verschiedene Stützstellen
-    über dem Intervall $[-1, 1]$ mit der optimalen Ordnung $2n+1$. Die zugehörigen Sützstellen
-    sind die Nullstellen des $(n+1)$-ten Legendrepolynoms $L_{n+1}\in \bbP_{n+1}$, und die Gewichte sind\[
+    Es gibt genau eine interpolatorische Quadraturformel zu $n+1$ 
+    paarweise verschiedene Stützstellen
+    über dem Intervall $[-1, 1]$ mit der optimalen Ordnung $2n+1$. Die 
+    zugehörigen Sützstellen
+    sind die Nullstellen des $(n+1)$-ten Legendrepolynoms $L_{n+1}\in 
+    \bbP_{n+1}$, und die Gewichte sind\[
         w_i = \int_{-1}^1 \prod_{j\neq i}(x-x_j)^2 \diff x > 0\]
     Für $f\in C^{2n+1}[-1,1]$ ist der Quadraturfehler \[
-        \int_a^b f(x)\diff x - \sum_{i=0}^n w_if(x_i) = \frac{1}{(2n+2)!}f^{(2n+2)}(\xi)\int_{-1}^1\prod_{i=0}^n(x-x_i)^2\diff x\]
+        \int_a^b f(x)\diff x - \sum_{i=0}^n w_if(x_i) = \frac{1}
+        {(2n+2)!}f^{(2n+2)}(\xi)\int_{-1}^1\prod_{i=0}^n(x-x_i)^2\diff x\]
 \end{theorem}
 \def\LgBp#1#2{\ensuremath{L_{#1}^{(#2)}}}
 \begin{proof}
     \begin{description}
         \item[gewichte $\mathbf{w_i}$:]
          Sei $L_i^{(n)}$ das $i$-te Lagrange-Basispolynom \[
-        \frac{\dprod_{j\neq i}(x-x_j)}{\dprod_{j\neq i}(x_i-x_j)}\in\Pol{n}\]
+        \frac{\dprod_{j\neq i}(x-x_j)}{\dprod_{j\neq i}(x_i-x_j)}\in
+        \Pol{n}\]
     \[L^{(n)}_i(x_j) = \delta_{ij} = \begin{cases}
         1 & i=j\\0&\text{sonst}
-    \end{cases}\] Damit ist $\left(L_i^{(n)}\right)^2 \in \Pol{2n}$, und Gauß-Quadraturformel exakt\begin{align*}
-        \int_{-1}^1 \left(L_i^{(n)}\right)^2 \diff x &= \sum_{j=0}^n w_j\cdot  {\LgBp{i}{n}}^2(x_j) \\
+    \end{cases}\] Damit ist $\left(L_i^{(n)}\right)^2 \in \Pol{2n}$, und 
+    Gauß-Quadraturformel exakt\begin{align*}
+        \int_{-1}^1 \left(L_i^{(n)}\right)^2 \diff x &= \sum_{j=0}^n 
+        w_j\cdot  {\LgBp{i}{n}}^2(x_j) \\
         &= \sum_{j=0}^n w_j \cdot \delta_{ij} = w_i
     \end{align*}
     Also ist $w_i > 0$
     \item[Eindeutigkeit:]
-    ergibt sich aus Orthogonalität von $q$ zu $\Pol{n}$, orthogonaler Unterraum ist $1-$dimensional,
-    alle Vielfachen eines Polynoms $\neq 0$, damit haben alle Polynome des orthog. Unterraums
+    ergibt sich aus Orthogonalität von $q$ zu $\Pol{n}$, orthogonaler 
+    Unterraum ist $1-$dimensional,
+    alle Vielfachen eines Polynoms $\neq 0$, damit haben alle Polynome 
+    des orthog. Unterraums
     die gleichen Nullstellen
     \item[Fehlerabschätzung:]
-    Wir nutzen eine Hermite-Interpolation als Hilfsmittel. Zu $f\in C^{2n+2}[-1,1]$ sei
-    $h \in \Pol{2n+1}$ die Hermite-Interpolierende zu $f(x_i), \ f'(x_i), \ \igb i 0 n$. Dafür hatten
+    Wir nutzen eine Hermite-Interpolation als Hilfsmittel. Zu $f\in 
+    C^{2n+2}[-1,1]$ sei
+    $h \in \Pol{2n+1}$ die Hermite-Interpolierende zu $f(x_i), \ f'(x_i), 
+    \ \igb i 0 n$. Dafür hatten
     wir die Abschätzung\[
-        f(x) - h(x) = \frac{1}{(2n+2)!} f^{(2n+2)}(\xi_x)\cdot\prod_{i=0}^n (x-x_i)^2\]
+        f(x) - h(x) = \frac{1}{(2n+2)!} f^{(2n+2)}(\xi_x)
+        \cdot\prod_{i=0}^n (x-x_i)^2\]
     Damit ist 
     \begin{align*}
-        I(f) - I^{(n)}(f) &= \left(I(f) - I(h)\right) - \left(I^{n}(f) - \underset{I^{(n)}(h)}{\underbrace{I(h)}}\right)\\
-        &= \int_{-1}^1 f(x)-h(x)\diff x - \sum_{i=0}^n w_i\underset{=0}{\underbrace{(f(x_i) - h(x_i))}}\\
-        &= \int_{-1}^1 \frac{1}{(2n+2)!}f^{(2n+2)}(\xi_x)\cdot\prod(x-x_i)^2\diff x\\
-        &\overset{\text{MWS}}{=} \frac{1}{(2n+2)!}f^{(2n+2)}(\xi)\cdot\prod_{j=0}^n(x-x_i)^2
+        I(f) - I^{(n)}(f) &= \left(I(f) - I(h)\right) - \left(I^{n}(f) - 
+        \underset{I^{(n)}(h)}{\underbrace{I(h)}}\right)\\
+        &= \int_{-1}^1 f(x)-h(x)\diff x - \sum_{i=0}^n w_i\underset{=0}
+        {\underbrace{(f(x_i) - h(x_i))}}\\
+        &= \int_{-1}^1 \frac{1}{(2n+2)!}f^{(2n+2)}(\xi_x)\cdot\prod(x-
+        x_i)^2\diff x\\
+        &\overset{\text{MWS}}{=} \frac{1}{(2n+2)!}f^{(2n+2)}(\xi)\cdot
+        \prod_{j=0}^n(x-x_i)^2
     \end{align*}
     \end{description}
 \end{proof}
 \underline{''Legendre-Polynome''}:\\
-    $L_k(x)$, Orthogonalpolynome bzgl. \[\scp{r}{s} = \int_{-1}^1 r(x)s(x)\diff x\]
+    $L_k(x)$, Orthogonalpolynome bzgl. \[\scp{r}{s} = \int_{-1}^1 
+    r(x)s(x)\diff x\]
     Es ist \[
-        L_0(x) \equiv 1, \midspace L_1(x) = x, \midspace (k+1)L_{k+1}(x) = (2k+1)x\cdot L_k(x) - kL_{k-1}(x)\]
+        L_0(x) \equiv 1, \midspace L_1(x) = x, \midspace (k+1)L_{k+1}(x) 
+        = (2k+1)x\cdot L_k(x) - kL_{k-1}(x)\]
     also \[
         L_2(x) = \frac{1}{2}(3x^2 - 1) = \frac{3}{2}x^2 - \frac{1}{2}\]
     Eine andere Formel ist \[
-        L_k(x) = \frac{1}{2^k\cdot k!}\frac{d^k}{dx^k}\left((x^2-1)^k\right)\]
+        L_k(x) = \frac{1}{2^k\cdot k!}\frac{d^k}{dx^k}\left((x^2-1)^k
+        \right)\]
 \begin{remark}
     Analoges Vorgehen bei Integration mit einer Gewichtsfunktion \[
         w(x): \ I_w(f) \coloneqq \int_a^b f(x)\cdot w(x)\diff x\]
     Orthogonalisierung bzgl des gewichteten Skalarprodukts \[
-        \scp{r}{s}_w \coloneqq \int_a^b r(x)\cdot s(x)\cdot w(x)\diff x, \largespace w>0\text{ fast überall, z.B. stetig}\]
+        \scp{r}{s}_w \coloneqq \int_a^b r(x)\cdot s(x)\cdot w(x)\diff x, 
+        \largespace w>0\text{ fast überall, z.B. stetig}\]
 \end{remark}
 \begin{example}
-    Für $w(x) \coloneqq \frac{1}{\sqrt{1-x^2}}$ auf $[-1,1]$ ergeben sich als Orthogonalpolynome 
+    Für $w(x) \coloneqq \frac{1}{\sqrt{1-x^2}}$ auf $[-1,1]$ ergeben sich 
+    als Orthogonalpolynome 
     gerade die Tschebyscheff Polynome $T_k(x)$.\\
     Für $w(x)\equiv 1$: Legendre-Polynome, s.o.
 \end{example}
-\underline{Für Integration auf dem Intervall $[a,b]$}: Transformation \[[-1,1]\to [a,b],\largespace \int_a^b f(x)\diff x = 
-\frac{b-a}{2}\int_{-1}^1 f\left(\frac{a+b}{2}+ t\frac{b-a}{2}\right)\diff t\] 
-Um Integrale genauer zu berechnen, wird auch bei den Gauß-Formeln nicht unbedingt der
-Polynomgrad weiter erhöht so, dass wieder eine Summe über kleinere Teilintervalle $I_j, \igb j 1 N$ genutzt,
+\underline{Für Integration auf dem Intervall $[a,b]$}: Transformation 
+\[[-1,1]\to [a,b],\largespace \int_a^b f(x)\diff x = 
+\frac{b-a}{2}\int_{-1}^1 f\left(\frac{a+b}{2}+ t\frac{b-a}{2}\right)\diff 
+t\] 
+Um Integrale genauer zu berechnen, wird auch bei den Gauß-Formeln nicht 
+unbedingt der
+Polynomgrad weiter erhöht so, dass wieder eine Summe über kleinere 
+Teilintervalle $I_j, \igb j 1 N$ genutzt,
 $I_j = [y_{j-1}, y_j], \midspace a=y_0< y_n \dots < y_N = b$
-Und für jedes Teilintervall die entsprechend transformierte Quadraturformel. Dafür bekommt man
+Und für jedes Teilintervall die entsprechend transformierte 
+Quadraturformel. Dafür bekommt man
 dann eine Fehlerabschätzung \begin{align*}
-        \abs{I(f) - I_h^{n}(f)} &= \abs{\int_a^b f(x)dx - \sum_{j=1}^N \frac{y_j-y_{j-1}}{2}\cdot \left(\sum_{i=0}^n w_i \cdot \Tilde{f_j}(x_i)\right)}\\
-        &\leq (b-a)\cdot c \cdot h^{2n+2}\cdot \dabs{f^{(2n+2)}}_{\max[a,b]}
+        \abs{I(f) - I_h^{n}(f)} &= \abs{\int_a^b f(x)dx - \sum_{j=1}^N 
+        \frac{y_j-y_{j-1}}{2}\cdot \left(\sum_{i=0}^n w_i \cdot 
+        \Tilde{f_j}(x_i)\right)}\\
+        &\leq (b-a)\cdot c \cdot h^{2n+2}\cdot 
+        \dabs{f^{(2n+2)}}_{\max[a,b]}
     \end{align*}
-    mit $h\coloneqq \max_{\igb j 1 N}(y_j-y_{j-1})$. Dabei ist $c$ unabhängig von $a,b,h,f$.
-    Bei Halbierung der Teilintervalllängen reduziert sich der Quadraturfehler also um 
+    mit $h\coloneqq \max_{\igb j 1 N}(y_j-y_{j-1})$. Dabei ist $c$ 
+    unabhängig von $a,b,h,f$.
+    Bei Halbierung der Teilintervalllängen reduziert sich der 
+    Quadraturfehler also um 
     Faktor $\left(\frac{1}{2}\right)^{2n+2}$.
 % WIR MÜSSEN IN DIE KLAMMER SCHREIBEN
 \subsection{Richardson-Extrapolation}
-Eine Idee/Methode, die man auch in anderen Situationen gut und gerne anwenden 
+Eine Idee/Methode, die man auch in anderen Situationen gut und gerne 
+anwenden 
 kann:\\
-Angenommen Berechnungsvorschrift mit Diskretisierungsgröße $h > 0$, $h\searrow 0$
-so, dass wir für die Approximation einer Größe $E_0$ eine \underline{Entwicklung}
+Angenommen Berechnungsvorschrift mit Diskretisierungsgröße $h > 0$, 
+$h\searrow 0$
+so, dass wir für die Approximation einer Größe $E_0$ eine 
+\underline{Entwicklung}
 der berechneten Größe $E(h)$ haben der Form \[
-    E(h)  = E_0 + c_1h^{K_1}+c_2h^{K_2} \in \calO{h^{K_2}}\text{ mit }0<k_1<k_2
+    E(h)  = E_0 + c_1h^{k_1}+c_2h^{k_2} \in \calO{h^{k_2}}\text{ mit } 
+    0<k_1<k_2
 \] 
-Dann können wir Berechnungen mit zwei verschiedenen qDiskretisierungen $h_1 > h_2 
-> 0$ durchführen, und mit diesen Ergebnissen die Ordnung $h^{K_1}$ eliminieren
+Dann können wir Berechnungen mit zwei verschiedenen Diskretisierungen 
+$h_1 > h_2 
+> 0$ durchführen, und mit diesen Ergebnissen die Ordnung $h^{k_1}$ 
+eliminieren
 \begin{align*}
     E(h_1)&=E_0+c_1h_1^{K_1}+c_2h_1^{K_2}\qquad \vert\cdot h_2^{K_1}\\
     E(h_2)&=E_0+c_1h_2^{K_1}+c_2h_2^{K_2}\qquad \vert\cdot h_1^{K_1}\\
-    h_1^{K_1}E(h_2)-h_2^{K_1}E(h_1)&=(h_1^{K_1}-h_2^{K_1})E_0+c_1\cdot0+c_2(h_1^{K_1}h_2^{K_2}-h_2^{K_1}h_1^{K_2})\\
-    \frac{ h_1^{K_1}E(h_2)-h_2^{K_1}E(h_1)}{h_1^{K_1}-h_2^{K_1}}&= E_0+c_2\frac{h_1^{K_1}h_2^{K_2}-h_2^{K_1}h_1^{K_2}}{h_1^{K_1}-h_2^{K_1}}\\
-    \intertext{\(h_2=dh_1\)}
-    \frac{h_1^{K_1}(E(h_2)-d^{K_1}E(h_1))}{h_1^{K_1}(1-d^{K_1})}&= E_0+c_2\frac{(d^{K_2}-d^{K_1})h_1^{K_1+K_2}}{h_1^{K_1}(1-d^{K_1})}\\
-    \Rightarrow \frac{E(h_2)-d^{K_1}E(h_1)}{1-d^{K_1}}&= E_0+c_2\frac{d^{K_2}-d^{K_1}}{1-d^{K_1}}h_1^{K_2}
+    h_1^{K_1}E(h_2)-h_2^{K_1}E(h_1)&=(h_1^{K_1}-
+    h_2^{K_1})E_0+c_1\cdot0+c_2(h_1^{K_1}h_2^{K_2}-h_2^{K_1}h_1^{K_2})\\
+    \frac{ h_1^{K_1}E(h_2)-h_2^{K_1}E(h_1)}{h_1^{K_1}-h_2^{K_1}}&= 
+    E_0+c_2\frac{h_1^{K_1}h_2^{K_2}-h_2^{K_1}h_1^{K_2}}{h_1^{K_1}-
+    h_2^{K_1}}\\
+    \intertext{\(h_2=dh_1\) mit \(0<d<1\)}
+    \frac{h_1^{K_1}(E(h_2)-d^{K_1}E(h_1))}{h_1^{K_1}(1-d^{K_1})}&= 
+    E_0+c_2\frac{(d^{K_2}-d^{K_1})h_1^{K_1+K_2}}{h_1^{K_1}(1-d^{K_1})}\\
+    \Rightarrow \frac{E(h_2)-d^{K_1}E(h_1)}{1-d^{K_1}}&= 
+    E_0+c_2\frac{d^{K_2}-d^{K_1}}{1-d^{K_1}}h_1^{K_2}
 \end{align*}
-Durch geschickte Kombination erhalten wir eine Approximation der Ordnung \(\calO{h^{K_2}}\) auch ohne \(K_2\) explizit zu kennen.
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Durch geschickte Kombination erhalten wir eine Approximation der Ordnung 
+\(\calO{h^{K_2}}\) auch ohne \(K_2\) explizit zu kennen.
 
 \subsubsection*{Anwendung auf numerische Integration}
-Wir kennen (falls die uzu integrierende Funktion glatt genug ist) die führenden
-Ordnungen des Quadraturfehlers vieler interpolierender Quadraturformeln. Durch 
-geeignete Kombination von Integrationen mit gleichlangen Teilintervallen mit 
-Längen $h_1, h_2$ erreicht man dann eine Approximation des Integrals $I(f)$ von 
+Wir kennen (falls die uzu integrierende Funktion glatt genug ist) die 
+führenden
+Ordnungen des Quadraturfehlers vieler interpolierender Quadraturformeln. 
+Durch 
+geeignete Kombination von Integrationen mit gleichlangen Teilintervallen 
+mit 
+Längen $h_1, h_2$ erreicht man dann eine Approximation des Integrals 
+$I(f)$ von 
 besserer Ordnung. Hat man eine weitergehende Entwicklung wie \[
     E(h) = E_0 + c_1h^{K_1} + c_2 h^{K_2} + c_3h^{K_3}\dots\]
 können entsprechend auch weiter höhere Ordnungen eliminiert werden, indem 
-genügend verschiedene Berechnungen mit verschiedenen $h$'s durchgeführt werden. 
+genügend verschiedene Berechnungen mit verschiedenen $h$'s durchgeführt 
+werden. 
 \begin{example}
     \hfill
     \begin{center}
         \includegraphics[width=\linewidth]{../Bilder/051222_1.png}
     \end{center}
 \end{example}
-%%%%
-Für die summierte Trapezregel auf einer gleichmäßigen Zerlegung mit Teilintervallen der Länge \(h=\frac{b-a}{N},\ x_i=a+ih,\ i=1,\dots,N\)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%
+
+
+Für die summierte Trapezregel auf einer gleichmäßigen Zerlegung mit 
+Teilintervallen der Länge \(h=\frac{b-a}{N},\ x_i=a+ih,\ i=1,\dots,N\)
 kann man zeigen:
 \begin{theorem}[''\underline{Euler-Maclaurinsche Summenformel}'']\hfill\\
     Ist \(f\in C^{2m+2}[a,b]\) und \[
-    a(h)\left(\frac{1}{2}f(a)+\sum^{N-1}_{i=1}f(x_i)+\frac{1}{2}f(b)\right)\]
+    a(h)\left(\frac{1}{2}f(a)+\sum^{N-1}_{i=1}f(x_i)+\frac{1}{2}f(b)
+    \right)\]
     das Ergebnis der summierten Trapezregel.\\
     Darum gilt die Entwicklung
     \newpage
-    \[
-        \int^b_af(x)\diff x = 
-        a(h)-\sum_{k=1}^m\left[h^{2k}\frac{B_{2k}}{(2k)!}\left(f^{(2k-1)}(b)-f^{(2k-1)}(a)\right)\right]-h^{2m+2}\frac{(b-a)}{(2m+2)!}B_{2m+2}\cdot f^{(2m+2)}(\xi)        
-    \]
-    mit $\xi\in[a,b]$ und den ''Bernoulli-Zahlen'' $B_j$, \[
+    \begin{align*}
+        \int^b_af(x)\diff x &= \\ 
+        a(h)-\sum_{k=1}^m\left[h^{2k}\frac{B_{2k}}{(2k)!}\left(f^{(2k-
+        1)}(b)-f^{(2k-1)}(a)\right)\right]&-h^{2m+2}\frac{(b-
+        a)}{(2m+2)!}B_{2m+2}\cdot f^{(2m+2)}(\xi)\\
+        \text{ mit } \xi\in[a,b]&\
+    \end{align*}
+    
+    mit den ''Bernoulli-Zahlen'' $B_j$, \[
         B_0 = 1, \midspace B_k = -\sum_{j=0}^{k-1}\frac{k!}{j!(k-j-1)!}B_j
     \]
     oder auch \[
@@ -433,7 +505,8 @@ kann man zeigen:
     (ohne Beweis)
 \end{theorem}
 
-Damit ergibt sich eine Entwicklung des Quadraturfehlers in \underline{gerade
+Damit ergibt sich eine Entwicklung des Quadraturfehlers in 
+\underline{gerade
  $h$-Potenzen} $h^2, h^4, h^6, \dots$, falls $f$ glatt genug ist.\\
 Dies kann genutzt werden, um aus Werten für verschiedene $h_l$ 
 eine immer bessere Approximation des Integrals zu berechnen.\\
@@ -443,43 +516,58 @@ Anwendung für $h_l \coloneqq \frac{h_0}{2l}, \ \igb l 0 {}$:\[
 \begin{description}
     \item[Vorteil:] Wiederverwendung der Funktionswerte $f(x_j)$ aus den 
     vorherigen Zerlegungen möglich.
-    \item[Nachteil:] Im $l$-ten Schritt müssten $2^l$ Operationen durchgeführt 
+    \item[Nachteil:] Im $l$-ten Schritt müssten $2^l$ Operationen 
+    durchgeführt 
     werden, wir mit steigenden $l$ relativ schnell groß 
 \end{description} 
 \begin{remark}
-    Folge $h,\frac{h}{2},\frac{h}{4},\frac{h}{8},\dots$ heißt auch \underline{
+    Folge $h,\frac{h}{2},\frac{h}{4},\frac{h}{8},\dots$ heißt auch 
+    \underline{
         ''Romberg-Folge''
     }
 \end{remark}
-Extrapolation kann nicht nur zur Verbesserung des Berechnungsprozesses, sondern
-auch zur numerischen Abschätzung des Fehlers genutzt werden:\\ Abschätzungen wie
-\[
-\vert I(f)-I_h^{(1)}(f)\vert \leq\frac{b-a}{12}\cdot h^2\vert\vert f''\vert\vert_{\max}
+
+Extrapolation kann nihct nur zur Verbesserung des Berechnungsprozesses, 
+sondern auch zur numerischen Abschätzung des Fehlers genutzt werden:\\
+Abschätzungen wie\[
+\vert I(f)-I_h^{(1)}(f)\vert \leq\frac{b-a}{12}\cdot h^2\vert\vert 
+f''\vert\vert_{\max}
 \]
-sind i.A. nicht auswertbar oder liefern zu grobe Ergebnisse. Falls eine Tolranz
-für die Berechnung vorgegeben ist, nützt das z.B. wenig. \\
-Legt man eine Entwicklung des Fehlers zugrunde, wie oben getan, dann kann man
-auch versuchen aus \(2\) Berechnungen den Fehler sowie eine optimale 
-Diskretisierung abzuschätzen. Für \begin{align*}
-    E(h_1) &= E_0 + c_1h_1^{K_1}+c_2h_1^{K_2}, \largespace \text{Rechnung mit }h_1,
+sind i.A. nicht auswertbar oder liefern zu grobe Ergebnisse. Falls eine 
+Tolranz für die Berechnung vorgegeben ist, nützt das z.B. wenig. \\
+Legt man eine Entwicklung des Fehlers zugrunde, wie oben getan, dann kann 
+man auch versuchen aus \(2\) Berechnungen den Fehler sowie eine optimale 
+Diskretisierung abzuschätzen. 
+Für \begin{align*}
+    E(h_1) &= E_0 + c_1h_1^{K_1}+c_2h_1^{K_2}, \largespace \text{Rechnung 
+    mit }h_1,
     h_2 = \frac{h_1}{2}\\
-    E(h_2) &= E_0 + c_1\left(\frac{h_1}{2}\right)^{K_1} + c_2\left(\frac{h_1}{2}\right)^{K_2}
+    E(h_2) &= E_0 + c_1\left(\frac{h_1}{2}\right)^{K_1} + 
+    c_2\left(\frac{h_1}{2}\right)^{K_2}
 \end{align*}
 Also \[
-    E(h) - E\left(\frac{h}{2}\right) = c_1\cdot\left(1-\frac{1}{2^{K_1}}\right) h_1^{K_1} + \calO{h_1^{K_2}}\]
+    E(h) - E\left(\frac{h}{2}\right) = c_1\cdot\left(1-\frac{1}{2^{K_1}}
+    \right) h_1^{K_1} + \calO{h_1^{K_2}}\]
 somit \[
-    c_1 = \frac{E(h) - E\left(\frac{h}{2}\right)}{1-\frac{1}{2^{K_1}}}h_1^{-K_1} + \calO{h_1^{K_2-K_1}}\largespace k_2-k_1 > 0\]
-Schaut man für den Fehler nur die führende Ordnung an, $E(h) - E_0 \approx c_1h_1^{K_1}$, 
+    c_1 = \frac{E(h) - E\left(\frac{h}{2}\right)}{1-\frac{1}
+    {2^{K_1}}}h_1^{-K_1} + \calO{h_1^{K_2-K_1}}\largespace k_2-k_1 > 0\]
+Schaut man für den Fehler nur die führende Ordnung an, $E(h) - E_0 
+\approx c_1h_1^{K_1}$, 
 dann ist \[
-    E(h) - E_0 \approx \frac{E(h) - E\left(\frac{h}{2}\right)}{1-\frac{1}{2^{K_1}}}\] 
-Ist eine Toleranz TOL für den Fehler vorgegeben, dann ist die dazu passende Gitterweite
+    E(h) - E_0 \approx \frac{E(h) - E\left(\frac{h}{2}\right)}{1-\frac{1}
+    {2^{K_1}}}\] 
+Ist eine Toleranz TOL für den Fehler vorgegeben, dann ist die dazu 
+passende Gitterweite
 \def\hopt{\ensuremath{h_{\text{opt}}}}
 
 $\hopt$ durch TOL$\approx c_1 \hopt^{K_1}$ bestimmt, also \[
     \hopt = \left(\frac{\text{TOL}}{c_1}\right)^{\frac{1}{K_1}}\]
-''\underline{a-posteriori}''-Fehlerabschätzung, ''im Nachhinein'', aus numerischen Resultaten 
+''\underline{a-posteriori}''-Fehlerabschätzung, ''im Nachhinein'', aus 
+numerischen Resultaten 
 versuchen, den Fehler abzuschätzen\\
-''\underline{a-priori}'': Im Vorhinein, Abschätzung durch Daten etc, ohne vorherige Berechnung
+''\underline{a-priori}'': Im Vorhinein, Abschätzung durch Daten etc, ohne 
+vorherige Berechnung
+
 
 
 }
