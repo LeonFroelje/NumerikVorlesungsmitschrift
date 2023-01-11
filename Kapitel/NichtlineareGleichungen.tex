@@ -1,0 +1,147 @@
+\documentclass[../Skript.tex]{subfiles}
+\graphicspath{{\subfix{../images/}}}
+\begin{document}
+    Numerische Bestimmung/Approximation von Nullstellen (nichtlinearen) Gleichungen wie z.B.
+    $$f(x) = 0$$ \[
+        a(x) = b(x) \iff a(x) - b(x) = 0\]
+    Untersuchung von Minima einer konvexen Funktion $g$, $$f:I\subset \R \to \R\text{ skalar}$$ oder auch
+    \[
+        f:\Omega \subset \R^n \to \R^n\]\[f:\Omega\subset \C \to \C\]
+    \begin{reminder}
+        Bei linearen Gleichunge ist die Lösung $x^*$ der Gleichung  $ Ax^* = b$
+        bis auf Rundungsfehler ''exakt'' berechenbar (wenn $A$ invertierbar)
+    \end{reminder}
+    Bei nichtlinearen Gleichung gibt es nur in Ausnahmefällen eine Formel zur Berechnung
+    der Lösung, dementsprechend kommen typicherweise iterative Verfahren zur 
+    (immer besser werdenden) Approximation der Lösung zum Einsatz.
+    Lösung $x^*$ ist dann typicherweise der \underline{Grenzwert} einer iterativ
+    erzeugten Folge \(x_{i_{i\in \N}}\) (Konvergenz zeigen{\huge !!!})\\
+    Abbruch der Folge nach endlich vielen Versuchen liefert 
+    \underline{Näherungslösung} \(\overline{x}\), möglichst mit
+    \underline{Abschätzung von \(\dabs{x^*-\overline{x}}\)}\\
+
+    Im einfachsten Fall: \(f:I\subset \R\to\R\) skalare Funktion, I 
+    Definitionsintervall von f.
+    \[\text{Gesucht: ein }x^*\in I\text{ mit }f(x^*)=0\]
+    Analysis: ist \(f:[a,b]\to \R\) \underline{stetig} und \(f(a)\cdot f(b)\leq 0\),
+    dann gibt es mindestens eine Nullstelle \(x^*\in [a,b]\) von f (Zwischenwertsatz)
+    \\
+    Daraus kann man leicht ein Intervallschachtelungsverfahren konstruieren.
+% ich mach jetzt :)
+
+
+\subsection*{Bisektionsverfahren:}
+\[[a,b],\ f\colon [a,b]\to \R \text{ stetig, } f(a)\cdot f(b)\leq 0\]
+\begin{align*}
+    f(a)\cdot f(b)=0 \Rightarrow x*=a \text{ oder } x*=b.   \text{ stop.}\\
+    a_0\coloneqq a,\ b_0\coloneqq b, \ i\coloneqq 1\\
+\end{align*}
+Setze \[x_i\coloneqq\frac{(a_{i-1}+b_{i-1})}{2}\] 
+ist \[f(x_i)=0\colon \quad x*=x_i,\ \text{stop.}\]
+ist \[b_{i-1}-a_{i-1}\leq \text{TOL, dann stop, } \overline{x}\coloneqq x_i\text{   Damit ist } \overline{x}- x*<\frac{b_{i-1}+a_{i-1}}{2}=\frac{b-a}{2^i}.\]
+ist \[f(a_i)\cdot f(x_i)<0 \]
+dann\[a_i\coloneqq a_{i-1},\ b_i\coloneqq x_{i}\]
+sonst \[a_i\coloneqq x_i,\ b_i\coloneqq b_{i-1}\]
+\[\implies i\coloneqq i+1\] 
+Setze \[x_i\coloneqq\frac{(a_{i-1}+b_{i-1})}{2}\]
+\[\vdots\]
+\\
+Länge des Intervalls in der \(i\)-ten Iteration:\\
+\[\frac{(b-a)}{2^i},\]
+Intervallschachtelung (für \(i\to \infty\)) konvergiert gegen genau eine reelle Zahl \(x*\in I\).\\
+
+Damit kann, bei vorgegebener Toleranz TOL, auch die Anzahl der maximal 
+(benötigten???????) Iterationen berechnet werden.\\
+Verfahren sehr einfach, nutzt nur stetigkeit von \(f\) aus, Konvergiert relativ 
+langsam. Wird (auch innerhalb anderer Algorithmen) eingesetzt. (Nur 1D!!!!!!)\\
+
+% leon schreibt <3 baby 
+\begin{question}
+    Gibt es allgemeiner anwendbare und oder schneller konvergierende Verfahren?
+\end{question}
+Um solche Algorithmen einfacher untersuchen zu können, stellen wir die Nullpunktsuche 
+als Fixpunktiteration dar \[
+    f(x^*) = 0 \iff F(x^*) = x^*\]
+z.B. mit $F(x) = x - f(x)$, dann gilt nämlich $F(x^*) = x^* - f(x^*) = x^*$
+Ausgehend von einem Startwert $x_0$ definiert dies eine Folge $(x_k)_{k\in\N}$ , die im
+günstigsten Fall gegen $x^*$ konvergiert, zur Untersuchung solcher Folgen benutzen wir den
+Banachschen Fixpunktsatz.
+\begin{definition}
+    Sei $(M, d)$ ein metrischer Raum, $F:M \to M$ eine Abbildung. Dann heißt $F$ \underline{kontraktion}
+    oder kontrahierende Abbildung, wenn es ein $q$ mit $0\leq q<1$ gibt so, dass \[
+        d(F(x), F(y)) \leq q\cdot d(x, y) \forall x,y\in M\]  
+\end{definition}
+
+%gagagaga gugu
+
+\begin{theorem}[\underline{Fixpunktsatz von Banach}]
+    \((M,d)\) ein \underline{vollständiger} metrischer Raum,\\
+    \(F:M\to M\) eine Kontraktion mit \(q<1\)\\
+    Dann besitzt F genau einen Fixpunkt \(x^*\) in M, d.h. \(\exists !x^*\in M:
+    F(x^*)=x^*\).\\
+    \(x_0\in M\) beliebiger Startpunkt und \(x_i\coloneqq F(x_{i-1}, i\in N\),
+    dann konvergiert \((x_i)_{i\in N}\) gegen \(x^*\) und es gelten die
+    Abschätzungen:
+    \[\underset{\text{(''a-priori'')}}{d(x^*,x_i)\leq \frac{q^{i}}{1-q}d(x_0,x_1)}
+    \] 
+    
+    Abschätzung der max. notwendigen Anzahl von Iterationen bis auf Toleranz\\
+    und
+    \[\underset{\text{(''a-posteriori'')}}{d(x^*,x_i)\leq \frac{q}{1-q}d(x_i,x_{i-1})}\]
+    In jeder Iteration Fehler abschätzen\\
+    
+    (Beweis: Analysis, geom. Reihe)
+\end{theorem}
+
+Zur ''Geschwindigkeit'' der Konvergenz: \typicherweise normierter Raum \(\R^n\), metrischer Raum \((\Omega,d)\) mit \(\Omega\subset\R^n,\ d(x,y)=\dabs{x-y}
+\)
+\begin{definition}\hfill\\
+Die Folge \((x_i)_{i\in\N}\) mit Grenzwert \(x*\) hat \underline{mindestens die Konvergenzordnung \(p \geq 1\)},
+mit \(C<1\) für \(p=1\) , \(C<\infty\) für \(p>1\). \(C\) heißt auch ''Fehlerkonstante''.
+\(p=1\): ''lineare Konvergenz'', \(p=2\) ''quadratische Konvergenz''.
+\end{definition}
+\begin{definition}
+    Alternative: \[
+    \dabs{x_{i+1}-x_i}\leq C\cdot \dabs{x_i-x_{i-1}}^P,
+    \] Äquivalent für Iterationen aus B.F.S \[
+    \dabs{F(x_i)-F(x_{i-1})}
+    \]
+\end{definition}
+Folge aus B.F.S.: Konvergenzordnung \(1\) mit \(C=q<1\)
+
+Zunächst weiter skalare Funktionen $f:I\to \R$, Fixpunktfunktion $F:J\to J$, $J\subset I$,
+$J$ abgeschlossen. Ist $F$ kontrahierend, so ist $F$ auch stetig. Ist $F$ stetig
+differenzierbar, dann lässt sich die Kontraktionszahl über die Ableitung abschätzen
+\begin{lemma}
+    Sei $F\in C^1([a,b],[a,b])$, dann ist $F$ genau dann kontrahierend auf $[a,b]$, wenn
+    $\abs{F'(x)} < 1$ für alle $x\in[a,b]$. 
+\end{lemma}
+\begin{question}
+    Ideen für kontrahierende Abbildung $F$?
+\end{question}
+Sei $f$ stetig differenzierbar auf $[a,b]$, $f(x^*) = 0$, $x^*\in [a,b]$. Setze 
+$F(x) \ceqq x-c\cdot f(x)$ mit $c\in \R\backslash \set{0}$
+Ist $F$ kontrahierend? Es gilt \[F'(x) = 1-cf'(x)\]
+also \[
+    \abs{F'(x)} < 1 \iff \abs{1-cf'(x)} < 1 \iff 0 < cf'(x) < 2\]
+dementsprechend muss $c$ klein genug sein und das richtige Vorzeichen haben und $f'(x) \neq 0$.
+Man muss das Intervall $J\subset I$ also evtl klein genug um $x^*$ wählen.
+
+\begin{question}
+    Was bedeutet dieses $F$ für unsere Fixpunktiteration?
+\end{question}
+Es gilt \begin{align*}
+    x_{i+1} = F(x_i) = x_i - cf(x_i) \iff f(x_i) + \frac{1}{c} (x_{i+1} - x_i)
+\end{align*}
+Das heißt $x_{i+1}$ ist Nullstelle der Geraden \[
+    g(x) = f(x_i) + \frac{1}{c}(x-x_i)\]
+Verfeinerung: Wähle $c=c(x) \leadsto \text{ Newton-Verfahren}$
+
+
+
+
+\typicherweise
+
+
+
+\end{document}

@@ -222,14 +222,25 @@
                         \else\if\empty#2\R^{#1\times #1}%
                         \else \R^{#1\times#2}\fi\fi}}%
 \def\Rn#1{\ensuremath{\if\empty#1\R^{n}\else\R^{#1}\fi}}
-\renewenvironment{proof}{{\bfseries Beweis}}{\qed\newline}
 \def\inv#1{\ensuremath{#1^{-1}}}
 \DeclareMathOperator{\grad}{grad}
 \DeclareMathOperator{\tempRe}{Re}
 \DeclareMathOperator{\tempIm}{Im}
 \def\Re{\tempRe}
 \def\Im{\tempIm}
+\def\typicherweise{$\underset{\underset{\text{{\textbf{\emph{typicherweise}}}}}{\underbrace{\text{{\textbf{\emph{typicherweise}}}}}}}{\underbrace{\text{\Huge{\textbf{\emph{typicherweise}}}}}}$}
+\def\ceqq{\ensuremath{\coloneqq}}
+\def\eqqc{\ensuremath{\eqqcolon}}
 
+\def\typicherweise{$\underset{
+\underset{\underset{\underset{\underset{.}{\underbrace{\scalebox{0.3}{\textbf{\emph{typicherweise}}}}}}{\underbrace{
+\text{{\tiny\textbf{\emph{typicherweise}}}}}}}{\underbrace{\text{{\small\textbf{\emph{typicherweise}}}}}}}{\underbrace{\text{{\Large\textbf{\emph{typicherweise}}}}}}}{\underbrace{\text{\Huge{\textbf{\emph{typicherweise}}}}}}$}
+
+\def\ceqq{\ensuremath{\coloneqq}}
+\def\eqqc{\ensuremath{\eqqcolon}}
+
+
+\renewenvironment{proof}{{\bfseries Beweis}}{\qed\newline}
 
 \theoremstyle{definition}
 \newtheorem{theorem}{Satz}[section]
